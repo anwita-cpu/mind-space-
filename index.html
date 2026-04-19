@@ -1,149 +1,133 @@
 <!DOCTYPE html>
- <html>
-     <head>
-          <title>Mindspace</title>
-      <style>
-       body{
-          background-color:black ;
-          color:white;
-          text-align: center;
-          padding:100px;
-       
-       h1{
-         color:white;
-         font-size: 70px;
-       }
+<html>
+  <head>
+    <title>Mindspace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-color: black;
+        color: white;
+        text-align: center;
+        padding: 100px;
+        font-family: 'Poppins', sans-serif;
+      }
 
-       p{
-        color:white;
-        font-size:16px;
-       }
+      h1 {
+        color: white;
+        font-size: 70px;
+      }
 
+      p {
+        color: white;
+        font-size: 16px;
+      }
 
-     nav {
-     background-color: #1a1a2e;
-     padding: 15px;
-     display: flex;
-     gap: 20px;
-    justify-content: center;
-}
+      nav {
+        background-color: #1a1a2e;
+        padding: 15px;
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+      }
 
-   nav a {
-   color: white;
-   text-decoration: none;
-   font-size: 16px;
-}
-        
- button {
- background-color:#7F77DD;
- border : none;
- color:white;
- padding:15px 40px;
- font-size: 18px;
- border-radius: 30px;
- cursor: pointer;
- margin-top: 30px;       
-       }
+      nav a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+      }
 
-    .card {
-  background-color: #1a1a2e;
-  color: white;
-  padding: 20px;
-  border-radius: 15px;
-  width: 180px;
-  margin: 20px auto;
-}
+      button {
+        background-color: #7F77DD;
+        border: none;
+        color: white;
+        padding: 15px 40px;
+        font-size: 18px;
+        border-radius: 30px;
+        cursor: pointer;
+        margin-top: 30px;
+      }
 
-.card h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
+      .card {
+        background-color: #1a1a2e;
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        width: 180px;
+        margin: 20px auto;
+      }
 
-.card p {
-  font-size: 14px;
-  line-height: 1.6;
-}
+      .card h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
 
-   .cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-}
-  
-  .card:hover {
-  background-color: #2a2a4a;
-  transform: translateY(-5px);
-}
+      .card p {
+        font-size: 14px;
+        line-height: 1.6;
+      }
 
-font-family:'Poppins' , sans-serif;
-        
+      .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+      }
 
-</style>
+      .card:hover {
+        background-color: #2a2a4a;
+        transform: translateY(-5px);
+      }
 
- </head>
-   <body>
-  
-  <nav>
-    <a href="index.html">MindSpace</a>
-   <a href="tracker.html">Mood Tracker</a>
-    <a href="toolkit.html">Toolkit</a>
-    <a href="journal.html">Journal</a>
- </nav>
+      a.card {
+        text-decoration: none;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
 
-       <h1>Mindspace</h1>
-       <p> A safe place for your mind</p>
-       <p> You don't have to figure it out alone</p>
-  
- <button> Get started </button>
+    <nav>
+      <a href="index.html">MindSpace</a>
+      <a href="tracker.html">Mood Tracker</a>
+      <a href="toolkit.html">Toolkit</a>
+      <a href="journal.html">Journal</a>
+    </nav>
 
- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <h1>Mindspace</h1>
+    <p>A safe place for your mind</p>
+    <p>You don't have to figure it out alone</p>
 
-  <div class="cards-container">
+    <button>Get started</button>
 
-  <div class="card">
-  <h3> 💬 Talk to Sage</h3>
-  <p>Sometimes you just need someone to talk to. Sage gets that</p>
-   </div>  
-   
-   
-<div class="card">
-<h3>📊 Mood Tracker</h3>
- <p>Log in how you feel everyday and spot patterns over time.</p>
- </div>
+    <div class="cards-container">
 
-  <div class="card">
- <h3> 🫙 Memory jar</h3>
- <p> Save photos,messages or moments that made you happy and on tough days read and rejoice them </p>
-  </div>
+      <div class="card">
+        <h3>💬 Talk to Sage</h3>
+        <p>Sometimes you just need someone to talk to. Sage gets that</p>
+      </div>
 
-  <div class="card">
-  <h3>🧘 Coping Toolkit</h3>
-  <p>Breathing exercises and calm-down tools for tough moments.</p>
-</div>
+      <a href="tracker.html" class="card">
+        <h3>📊 Mood Tracker</h3>
+        <p>Log in how you feel everyday and spot patterns over time.</p>
+      </a>
 
- <div class="card">
-  <h3>💨 Vent button</h3>
-  <p> Opens a private space to just type everything out — it never saves, just disappears after. </p>
- </div>
+      <div class="card">
+        <h3>🫙 Memory jar</h3>
+        <p>Save photos, messages or moments that made you happy and on tough days read and rejoice them</p>
+      </div>
 
- </div>
-  
-  
-   
+      <div class="card">
+        <h3>🧘 Coping Toolkit</h3>
+        <p>Breathing exercises and calm-down tools for tough moments.</p>
+      </div>
 
-      
-      
-    
-   
-       
-       
+      <div class="card">
+        <h3>💨 Vent button</h3>
+        <p>Opens a private space to just type everything out — it never saves, just disappears after.</p>
+      </div>
 
-       
-       
-      
-          
-    
+    </div>
+
   </body>
 </html>
