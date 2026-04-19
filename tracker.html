@@ -4,6 +4,27 @@
     <title>Mood Tracker — MindSpace</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+
+
+
+       const buttons = document.querySelectorAll('.emoji-btn');
+  
+  buttons.forEach(button => {
+    button.addEventListener('click', function() {
+      const siblings = this.parentElement.querySelectorAll('.emoji-btn');
+      siblings.forEach(btn => {
+        btn.style.borderColor = '#1a1a2e';
+        btn.style.background = 'none';
+      });
+      this.style.borderColor = '#7F77DD';
+      this.style.background = '#2a2a4a';
+    });
+  });
+
+  document.querySelector('.submit').addEventListener('click', function() {
+    alert('✨ Check-in saved! See you tomorrow.');
+  });
+</script>
       body {
         background-color: black;
         color: white;
