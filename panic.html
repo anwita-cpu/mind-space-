@@ -40,9 +40,44 @@
  <h1>😰 Panic Attack Help</h1>
 <p>Let's get your mind somewhere safe. Focus on these challenges.</p>
 
+ <div id="challenge" style="display:none; font-size:24px; margin:40px auto; padding:30px; background-color:#1a1a2e; border-radius:15px; width:400px;">
+</div>
      
+<button id="btn" style="background-color:#7F77DD; border:none; color:white; padding:15px 40px; font-size:18px; border-radius:30px; cursor:pointer; font-family:'Poppins', sans-serif; margin-top:20px;">
+  Start
+</button>
 
+<p id="final" style="display:none; font-size:24px; margin-top: 40px; color:#7F77DD;">
+   You did it your stronger than you think  💜
+</p>
 
+   <script>
+   var challenges = [
+   "Name 3 things that red in the room"
+   "Count Backwards from 20 by 2s"
+    "Spell your full name backwards 🔤",
+    "What's the smallest thing you can see?"
+    "Name 4 things you can hear right now"
+    "Name a food for every letter: A, B, C, D, E"
+
+    ];
+
+   var current = 0;
+      document.getElementById('btn').addEventListener('click', function() {
+    if (current < challenges.length) {
+
+      document.getElementById('challenge').style.display = 'block';
+      document.getElementById('challenge').textContent = challenges[current];
+      document.getElementById('btn').textContent = 'Next challenge';
+      current++;
+    } else {
+      document.getElementById('challenge').style.display = 'none';
+      document.getElementById('btn').style.display = 'none';
+      document.getElementById('final').style.display = 'block';
+    }
+  });
+</script>
+ 
   
     
 
