@@ -121,6 +121,26 @@
         <p>Breathing exercises and calm-down tools for tough moments.</p>
       </div>
 
+      <div style="margin-top:40px; padding:30px; background-color:#1a1a2e; border-radius:15px; width:400px; margin-left:auto; margin-right:auto;">
+  <h3>🆘 Emergency Contact</h3>
+  <p style="font-size:14px;">Save a contact you can call when things get really tough.</p>
+
+  <input id="contactName" type="text" placeholder="Name" style="width:80%; padding:10px; margin:5px; border-radius:10px; border:none; font-size:16px;">
+
+  <input id="contactNumber" type="tel" placeholder="Phone number" style="width:80%; padding:10px; margin:5px; border-radius:10px; border:none; font-size:16px;">
+
+  <button onclick="saveContact()" style="background-color:#7F77DD; border:none; color:white; padding:10px 30px; font-size:16px; border-radius:30px; cursor:pointer; margin-top:10px;">
+    Save Contact
+  </button>
+
+  <div id="savedContact" style="display:none; margin-top:15px;">
+    <p id="savedName" style="font-size:18px;"></p>
+    <a id="callBtn" href="" style="background-color:#4CAF50; color:white; padding:10px 30px; border-radius:30px; text-decoration:none; font-size:18px;">
+      📞 Call Now
+    </a>
+  </div>
+</div>
+
 
       <div class="card"  onclick="window.location.href='vent.html'">
         <h3>💨 Vent button</h3>
