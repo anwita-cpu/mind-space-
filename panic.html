@@ -54,10 +54,10 @@
    <script>
    var challenges = [
    "Name 3 things that red in the room",
-   "Count Backwards from 20 by 2s",
-    "Spell your full name backwards 🔤",
+   "Count Backwards from 20 by",
+    "Spell your name backwards 🔤",
     "What's the smallest thing you can see?",
-    "Name 2 things you can hear right now",
+    "Name 1 things you can hear right now",
     "Name a food for every letter: A, B, C, D, E",
 
     ];
@@ -77,9 +77,26 @@
     }
   });
 </script>
- 
-  
-    
+
+   <script>
+  document.getElementById('mic').addEventListener('click', function() {
+  var recognition = new webkitSpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.continuous = true; 
+
+  document.getElementById('mic').textContent = '🔴 Listening...';
+
+  recognition.onresult = function(event) {
+    var text = '';
+    for (var i = 0; i < event.results.length; i++) {
+      text = text + event.results[i][0].transcript;
+    }
+    document.querySelector('textarea').value = text;
+  };
+
+  recognition.start();
+});
+    <script>
 
   </body>
    
