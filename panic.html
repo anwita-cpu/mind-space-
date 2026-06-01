@@ -96,7 +96,27 @@
 
   recognition.start();
 });
+   </script>
+
     <script>
+  document.querySelector('.letitgo').addEventListener('click', function() {
+    const textarea = document.querySelector('textarea');
+    
+    if(textarea.value === '') {
+      alert('Type something first!');
+      return;
+    }
+
+    textarea.style.transition = 'opacity 1s ease, transform 1s ease';
+    textarea.style.opacity = '0';
+    textarea.style.transform = 'scale(0.8)';
+    
+setTimeout(function() {
+  textarea.style.display = 'none';
+  document.querySelector('.Enter').style.display = 'none';
+  document.getElementById('message').style.display = 'block';
+  }, 1000);
+
 
   </body>
    
