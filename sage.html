@@ -1,7 +1,72 @@
 <!DOCTYPE html>
   <html>
       <head>
-         <title></title>
+         <title> Sage- Mindspace </title>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+        <style>
+
+        body{
+        background-color: black;
+        color : white;
+        font-family : 'Poppins', sans-serif;
+        padding : 0px;
+        margin: 0px;
+        }
+
+        nav{
+      background-color: #1a1a2e;
+      padding: 15px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+      nav a{
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+
+      }
+
+     h1{
+       text-align :center;
+       font-size: 36px;
+
+     }
+      p{
+        text-align: center;
+
+      }
+
+      
+ </style>
+
+      <body>
+
+      <nav>
+      <a href= "index.html">Mindspace</a>
+       </nav>
+
+        <h1>💬 Sage</h1>
+        <p>Need a safe space to talk? Sage is here to listen</p>
+
+        <div id="chatbox" style="width:500px; height:400px; margin:20px auto; background-color:#1a1a2e; border-radius:15px; padding:20px; overflow-y:scroll; text-align:left;">
+  <p style="background-color:#7F77DD; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%;">
+    Hey, I'm Sage 💜 What's on your mind?
+  </p>
+</div>
+
+      <div style="width:500px; margin:10px auto; display:flex; gap:10px;">
+  <input id="userInput" type="text" placeholder="Type your message..." style="flex:1; padding:12px; border-radius:30px; border:none; font-size:16px; font-family:'Poppins', sans-serif;">
+  <button id="sendBtn" style="background-color:#7F77DD; border:none; color:white; padding:12px 25px; border-radius:30px; cursor:pointer; font-size:16px; font-family:'Poppins', sans-serif;">
+
+     Send
+  </button>
+</div>
+
+        
+        
+      </body>
 
         
       </head>
