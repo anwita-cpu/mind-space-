@@ -64,6 +64,25 @@
   </button>
 </div>
 
+        <script>
+  document.getElementById('mic').addEventListener('click', function() {
+  var recognition = new webkitSpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.continuous = true; 
+
+  document.getElementById('mic').textContent = '🔴 Listening...';
+
+  recognition.onresult = function(event) {
+    var text = '';
+    for (var i = 0; i < event.results.length; i++) {
+      text = text + event.results[i][0].transcript;
+    }
+    document.querySelector('textarea').value = text;
+  };
+
+  recognition.start();
+});
+   </script>
         
         
       </body>
