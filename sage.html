@@ -65,8 +65,8 @@
   </button>
 </div>
 
-      <script>
-  var API_KEY = 'AQ.Ab8RN6J-Sz5ITebnZ89hQ98_cGYXKDTWnWVeEonIUU5eigOeQA';
+    <script>
+  var API_KEY = 'AQ.Ab8RN6L6LkMjNMWeKiWgo7ugNwTNa6bFWs-Sd0g4Lw3FjHUkZQ';
 
   document.getElementById('sendBtn').addEventListener('click', function() {
     var input = document.getElementById('userInput');
@@ -84,7 +84,7 @@
     var userText = input.value;
     input.value = '';
 
-    fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + API_KEY, {
+    fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + API_KEY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -96,17 +96,30 @@
         ]
       })
     })
-    .then(function(response) { return response.json(); })
-    .then(function(data) {
+    .then(function(response) {
+      return response.json().then(function(data) {
+        return { ok: response.ok, status: response.status, data: data };
+      });
+    })
+    .then(function(result) {
       var sageMsg = document.createElement('p');
-      sageMsg.textContent = data.candidates[0].content.parts[0].text;
+      if (!result.ok) {
+        sageMsg.textContent = '⚠️ API error (' + result.status + '): ' + (result.data.error && result.data.error.message ? result.data.error.message : 'request failed');
+      } else if (result.data.candidates && result.data.candidates[0] && result.data.candidates[0].content) {
+        sageMsg.textContent = result.data.candidates[0].content.parts[0].text;
+      } else {
+        sageMsg.textContent = '⚠️ No response received from Sage.';
+      }
       sageMsg.style.cssText = 'background-color:#7F77DD; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%; clear:both;';
       chatbox.appendChild(sageMsg);
       chatbox.scrollTop = chatbox.scrollHeight;
-
-
-
-
+    })
+    .catch(function(err) {
+      var sageMsg = document.createElement('p');
+      sageMsg.textContent = '⚠️ Network error: ' + err.message;
+      sageMsg.style.cssText = 'background-color:#7F77DD; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%; clear:both;';
+      chatbox.appendChild(sageMsg);
+      chatbox.scrollTop = chatbox.scrollHeight;
     });
   });
 </script>
