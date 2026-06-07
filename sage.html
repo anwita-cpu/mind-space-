@@ -65,9 +65,11 @@
   </button>
 </div>
 
-    <script>
-var API_KEY = sessionStorage.getItem('sage_api_key') || prompt('Enter your Gemini API key:');
-if (API_KEY) sessionStorage.setItem('sage_api_key', API_KEY);
+   <script>
+  var API_KEY = sessionStorage.getItem('sage_api_key') || prompt('Enter your Gemini API key:');
+  if (API_KEY) sessionStorage.setItem('sage_api_key', API_KEY);
+
+  var conversationHistory = [];
 
   document.getElementById('sendBtn').addEventListener('click', function() {
     var input = document.getElementById('userInput');
@@ -85,16 +87,16 @@ if (API_KEY) sessionStorage.setItem('sage_api_key', API_KEY);
     var userText = input.value;
     input.value = '';
 
+    conversationHistory.push({ role: "user", parts: [{ text: userText }] });
+
     fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + API_KEY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         system_instruction: {
-          parts: [{ text: "You are Sage, a kind and supportive friend in the MindSpace app. You talk to teens who are going through tough times. You listen, you are warm, you never judge. You speak casually like a friend, not a therapist. You use simple language. Keep responses short, 2-3 sentences max. If someone seems like they are in danger or crisis, gently encourage them to talk to a trusted adult or call a helpline. Never give medical advice. Always remind them that their feelings are valid." }]
+          parts: [{ text: "You are Sage, a kind and supportive friend in the MindSpace app. You talk to teens who are going through tough times. You listen, you are warm, you never judge. You speak casually like a friend, not a therapist. You use simple language. Keep responses short, 2-3 sentences max. Vary your wording naturally instead of repeating the same phrases — respond freshly based on what the person actually said and the flow of the conversation so far. If someone seems like they are in danger or crisis, gently encourage them to talk to a trusted adult or call a helpline. Never give medical advice. Always remind them that their feelings are valid." }]
         },
-        contents: [
-          { role: "user", parts: [{ text: userText }] }
-        ]
+        contents: conversationHistory
       })
     })
     .then(function(response) {
@@ -107,7 +109,9 @@ if (API_KEY) sessionStorage.setItem('sage_api_key', API_KEY);
       if (!result.ok) {
         sageMsg.textContent = '⚠️ API error (' + result.status + '): ' + (result.data.error && result.data.error.message ? result.data.error.message : 'request failed');
       } else if (result.data.candidates && result.data.candidates[0] && result.data.candidates[0].content) {
-        sageMsg.textContent = result.data.candidates[0].content.parts[0].text;
+        var replyText = result.data.candidates[0].content.parts[0].text;
+        sageMsg.textContent = replyText;
+        conversationHistory.push({ role: "model", parts: [{ text: replyText }] });
       } else {
         sageMsg.textContent = '⚠️ No response received from Sage.';
       }
@@ -124,4 +128,3 @@ if (API_KEY) sessionStorage.setItem('sage_api_key', API_KEY);
     });
   });
 </script>
-
