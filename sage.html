@@ -67,4 +67,49 @@
   </button>
 </div>
 
-       
+      <script>
+  var API_KEY = AQ.Ab8RN6I3Lq6jUYytQ6W20Jzdo8TCz6UgLRKXg8UIiVuDZi3mIg';
+
+  document.getElementById('sendBtn').addEventListener('click', function() {
+    var input = document.getElementById('userInput');
+    var chatbox = document.getElementById('chatbox');
+
+    if (input.value === '') {
+      return;
+    }
+
+    var userMsg = document.createElement('p');
+    userMsg.textContent = input.value;
+    userMsg.style.cssText = 'background-color:#2a2a4a; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%; float:right; clear:both;';
+    chatbox.appendChild(userMsg);
+
+    var userText = input.value;
+    input.value = '';
+
+    fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + API_KEY, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: {
+          parts: [{ text: "You are Sage, a kind and supportive friend in the MindSpace app. You talk to teens who are going through tough times. You listen, you are warm, you never judge. You speak casually like a friend, not a therapist. You use simple language. Keep responses short, 2-3 sentences max. If someone seems like they are in danger or crisis, gently encourage them to talk to a trusted adult or call a helpline. Never give medical advice. Always remind them that their feelings are valid." }]
+        },
+        contents: [
+          { role: "user", parts: [{ text: userText }] }
+        ]
+      })
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      var sageMsg = document.createElement('p');
+      sageMsg.textContent = data.candidates[0].content.parts[0].text;
+      sageMsg.style.cssText = 'background-color:#7F77DD; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%; clear:both;';
+      chatbox.appendChild(sageMsg);
+      chatbox.scrollTop = chatbox.scrollHeight;
+
+
+
+
+    });
+  });
+</script>
+
