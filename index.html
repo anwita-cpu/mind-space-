@@ -220,7 +220,7 @@ function renderGarden(){
   var flowers=loadFlowers();
   var svg=document.getElementById('gardenSvg');
   var W=window.innerWidth,H=window.innerHeight;
-  svg.setAttribute('viewBox','0 0 '+W+''+H);
+svg.setAttribute('viewBox','0 0 1920 1080');
   var html='';
   flowers.forEach(function(f){html+=drawFlower(f);});
   svg.innerHTML=html;
