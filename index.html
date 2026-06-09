@@ -219,7 +219,7 @@ function drawFlower(f){
 function renderGarden(){
   var flowers=loadFlowers();
   var svg=document.getElementById('gardenSvg');
-  var W=window.innerWidth,H=Math.max(document.body.scrollHeight,window.innerHeight);
+  var W=window.innerWidth,H=window.innerHeight;
   svg.setAttribute('viewBox','0 0 '+W+''+H);
   var html='';
   flowers.forEach(function(f){html+=drawFlower(f);});
