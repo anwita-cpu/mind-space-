@@ -153,5 +153,48 @@
   <p>⚠️ MindSpace is not a substitute for professional therapy or medical advice. If you are in crisis or need immediate help, please contact a trusted adult or call a helpline.</p>
 </div>
 
+    <script>
+
+    var palettes = [
+  { p1:'#FF9ECD', p2:'#FF3D9A', center:'#FFD93D' },
+  { p1:'#C084FC', p2:'#A855F7', center:'#FDE68A' },
+  { p1:'#60C8F5', p2:'#22A8E8', center:'#FFD93D' },
+  { p1:'#86EFAC', p2:'#4ADE80', center:'#FB923C' },
+  { p1:'#FDE68A', p2:'#FCD34D', center:'#F472B6' },
+  { p1:'#FCA5A5', p2:'#F87171', center:'#FDE68A' },
+  { p1:'#F9A8D4', p2:'#EC4899', center:'#FCD34D' },
+  { p1:'#A5F3FC', p2:'#22D3EE', center:'#FB7185' },
+  { p1:'#FED7AA', p2:'#FB923C', center:'#C084FC' },
+  { p1:'#D9F99D', p2:'#86EFAC', center:'#F472B6' },
+
+    function drawFlower(f) {
+  var s = f.scale;
+  var p = palettes[f.palette];
+  var x = f.x, y = f.y;
+  var petalR = 13 * s;
+  var petalD = 17 * s;
+  var html = '<g opacity="' + f.opacity + '" transform="rotate(' + f.angle + ' ' + x + ' ' + y + ')">';
+  for (var i = 0; i < 6; i++) {
+    var rad = i * 60 * Math.PI / 180;
+    var px = x + Math.sin(rad) * petalD;
+    var py = y - Math.cos(rad) * petalD;
+    html += '<ellipse cx="' + px + '" cy="' + py + '" rx="' + (petalR * 0.62) + '" ry="' + petalR + '" fill="' + (i % 2 === 0 ? p.p1 : p.p2) + '" transform="rotate(' + (i * 60) + ' ' + x + ' ' + y + ')"/>';
+  }
+  html += '<circle cx="' + x + '" cy="' + y + '" r="' + (9 * s) + '" fill="' + p.center + '"/>';
+  html += '<circle cx="' + (x - 2.5*s) + '" cy="' + (y - 2.5*s) + '" r="' + (3.5 * s) + '" fill="#fff" opacity="0.35"/>';
+  html += '</g>';
+  return html;
+
+      flowers.push({
+  x:       spot.x,
+  y:       spot.y,
+  scale:   parseFloat(rand(1.4, 2.2).toFixed(2)), 
+  angle:   parseFloat(rand(-30, 30).toFixed(1)),
+  palette: Math.floor(Math.random() * palettes.length),
+  opacity: parseFloat(rand(0.82, 0.97).toFixed(2))
+});
+
+      
+
   </body>
 </html>
