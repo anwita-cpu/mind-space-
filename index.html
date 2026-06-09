@@ -155,48 +155,130 @@
 
     <script>
 
-    var palettes = [
-  { p1:'#FF9ECD', p2:'#FF3D9A', center:'#FFD93D' },
-  { p1:'#C084FC', p2:'#A855F7', center:'#FDE68A' },
-  { p1:'#60C8F5', p2:'#22A8E8', center:'#FFD93D' },
-  { p1:'#86EFAC', p2:'#4ADE80', center:'#FB923C' },
-  { p1:'#FDE68A', p2:'#FCD34D', center:'#F472B6' },
-  { p1:'#FCA5A5', p2:'#F87171', center:'#FDE68A' },
-  { p1:'#F9A8D4', p2:'#EC4899', center:'#FCD34D' },
-  { p1:'#A5F3FC', p2:'#22D3EE', center:'#FB7185' },
-  { p1:'#FED7AA', p2:'#FB923C', center:'#C084FC' },
-  { p1:'#D9F99D', p2:'#86EFAC', center:'#F472B6' },
-
-    function drawFlower(f) {
-  var s = f.scale;
-  var p = palettes[f.palette];
-  var x = f.x, y = f.y;
-  var petalR = 13 * s;
-  var petalD = 17 * s;
-  var html = '<g opacity="' + f.opacity + '" transform="rotate(' + f.angle + ' ' + x + ' ' + y + ')">';
-  for (var i = 0; i < 6; i++) {
-    var rad = i * 60 * Math.PI / 180;
-    var px = x + Math.sin(rad) * petalD;
-    var py = y - Math.cos(rad) * petalD;
-    html += '<ellipse cx="' + px + '" cy="' + py + '" rx="' + (petalR * 0.62) + '" ry="' + petalR + '" fill="' + (i % 2 === 0 ? p.p1 : p.p2) + '" transform="rotate(' + (i * 60) + ' ' + x + ' ' + y + ')"/>';
+    var moodBg = {
+  happy:'#120f00', calm:'#001a0e', sad:'#1a0e00',
+  angry:'#00101a', anxious:'#0e0018', tired:'#1a0010'
+};
+var palettes = [
+  {p1:'#FF9ECD',p2:'#FF3D9A',center:'#FFD93D'},
+  {p1:'#C084FC',p2:'#A855F7',center:'#FDE68A'},
+  {p1:'#60C8F5',p2:'#22A8E8',center:'#FFD93D'},
+  {p1:'#86EFAC',p2:'#4ADE80',center:'#FB923C'},
+  {p1:'#FDE68A',p2:'#FCD34D',center:'#F472B6'},
+  {p1:'#FCA5A5',p2:'#F87171',center:'#FDE68A'},
+  {p1:'#F9A8D4',p2:'#EC4899',center:'#FCD34D'},
+  {p1:'#A5F3FC',p2:'#22D3EE',center:'#FB7185'},
+  {p1:'#FED7AA',p2:'#FB923C',center:'#C084FC'},
+  {p1:'#D9F99D',p2:'#86EFAC',center:'#F472B6'},
+];
+function rand(a,b){return a+Math.random()*(b-a);}
+function overlaps(x,y,flowers){
+  for(var i=0;i<flowers.length;i++){
+    var dx=flowers[i].x-x,dy=flowers[i].y-y;
+    if(Math.sqrt(dx*dx+dy*dy)<80)return true;
   }
-  html += '<circle cx="' + x + '" cy="' + y + '" r="' + (9 * s) + '" fill="' + p.center + '"/>';
-  html += '<circle cx="' + (x - 2.5*s) + '" cy="' + (y - 2.5*s) + '" r="' + (3.5 * s) + '" fill="#fff" opacity="0.35"/>';
-  html += '</g>';
+  return false;
+}
+function findSpot(flowers){
+  var W=window.innerWidth,H=Math.max(document.body.scrollHeight,window.innerHeight);
+  var zones=[
+    {x1:10,y1:80,x2:W*0.15,y2:H-50},
+    {x1:W*0.85,y1:80,x2:W-10,y2:H-50},
+    {x1:W*0.15,y1:80,x2:W*0.85,y2:160},
+    {x1:W*0.15,y1:H*0.78,x2:W*0.85,y2:H-40},
+  ];
+  for(var t=0;t<120;t++){
+    var z=zones[Math.floor(Math.random()*zones.length)];
+    var x=rand(z.x1+35,z.x2-35),y=rand(z.y1+35,z.y2-35);
+    if(!overlaps(x,y,flowers))return{x:Math.round(x),y:Math.round(y)};
+  }
+  return null;
+}
+function drawFlower(f){
+  var s=f.scale,p=palettes[f.palette],x=f.x,y=f.y;
+  var petalR=13*s,petalD=17*s;
+  var html='<g opacity="'+f.opacity+'" transform="rotate('+f.angle+' '+x+' '+y+')">';
+  for(var i=0;i<6;i++){
+    var rad=i*60*Math.PI/180;
+    var px=x+Math.sin(rad)*petalD,py=y-Math.cos(rad)*petalD;
+    html+='<ellipse cx="'+px+'" cy="'+py+'" rx="'+(petalR*0.62)+'" ry="'+petalR+'" fill="'+(i%2===0?p.p1:p.p2)+'" transform="rotate('+(i*60)+' '+x+' '+y+')"/>';
+  }
+  html+='<circle cx="'+x+'" cy="'+y+'" r="'+(9*s)+'" fill="'+p.center+'"/>';
+  html+='<circle cx="'+(x-2.5*s)+'" cy="'+(y-2.5*s)+'" r="'+(3.5*s)+'" fill="#fff" opacity="0.35"/>';
+  html+='</g>';
   return html;
+}
+function renderGarden(){
+  var flowers=loadFlowers();
+  var svg=document.getElementById('gardenSvg');
+  var W=window.innerWidth,H=Math.max(document.body.scrollHeight,window.innerHeight);
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var html='';
+  flowers.forEach(function(f){html+=drawFlower(f);});
+  svg.innerHTML=html;
+}
+function loadFlowers(){
+  try{return JSON.parse(localStorage.getItem('ms_flowers')||'[]');}catch(e){return[];}
+}
+function saveFlowers(f){
+  try{localStorage.setItem('ms_flowers',JSON.stringify(f));}catch(e){}
+}
+function bloomNewFlower(){
+  var flowers=loadFlowers();
+  if(flowers.length>=28)return;
+  var spot=findSpot(flowers);
+  if(!spot)return;
+  flowers.push({
+    x:spot.x,y:spot.y,
+    scale:parseFloat(rand(1.4,2.2).toFixed(2)),
+    angle:parseFloat(rand(-30,30).toFixed(1)),
+    palette:Math.floor(Math.random()*palettes.length),
+    opacity:parseFloat(rand(0.82,0.97).toFixed(2))
+  });
+  saveFlowers(flowers);
+  renderGarden();
+}
+window.mindspaceBloom=bloomNewFlower;
+function logMood(btn,key,msg){
+  document.querySelectorAll('.mood-btn').forEach(function(b){b.classList.remove('picked');});
+  btn.classList.add('picked');
+  var el=document.getElementById('moodMsg');
+  el.classList.remove('show');
+  setTimeout(function(){el.textContent=msg;el.classList.add('show');},200);
+  document.body.style.backgroundColor=moodBg[key]||'#0a0a0f';
+  var today=new Date().toDateString();
+  if(localStorage.getItem('ms_last_mood')!==today){
+    localStorage.setItem('ms_last_mood',today);
+    setTimeout(bloomNewFlower,700);
+  }
+}
+function saveContact(){
+  var name=document.getElementById('contactName').value.trim();
+  var number=document.getElementById('contactNumber').value.trim();
+  if(!name||!number)return;
+  localStorage.setItem('ms_emergency_name',name);
+  localStorage.setItem('ms_emergency_number',number);
+  showSavedContact(name,number);
+}
+function showSavedContact(name,number){
+  document.getElementById('savedName').textContent=name;
+  document.getElementById('callBtn').href='tel:'+number;
+  document.getElementById('savedContact').style.display='block';
+}
+window.addEventListener('load',function(){
+  renderGarden();
+  var n=localStorage.getItem('ms_emergency_name');
+  var num=localStorage.getItem('ms_emergency_number');
+  if(n&&num)showSavedContact(n,num);
+  window.addEventListener('resize',renderGarden);
 
-      flowers.push({
-  x:       spot.x,
-  y:       spot.y,
-  scale:   parseFloat(rand(1.4, 2.2).toFixed(2)), 
-  angle:   parseFloat(rand(-30, 30).toFixed(1)),
-  palette: Math.floor(Math.random() * palettes.length),
-  opacity: parseFloat(rand(0.82, 0.97).toFixed(2))
+ 
 });
 
-      </script>
+    </script>
 
+   </body>
 
-    
-  </body>
 </html>
+      
+    
