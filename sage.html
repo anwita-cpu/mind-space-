@@ -90,7 +90,7 @@
 
     conversationHistory.push({ role: "user", parts: [{ text: userText }] });
 
-    fetch(API_URL, {
+  fetch(API_URL, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY },
   body: JSON.stringify({
@@ -101,34 +101,32 @@
     ],
     max_tokens: 500
   })
+}).then(function(response) {
+  return response.json().then(function(data) {
+    return { ok: response.ok, status: response.status, data: data };
+  });
+}).then(function(result) {
+  var sageMsg = document.createElement('p');
+  if (!result.ok) {
+    sageMsg.textContent = '⚠️ API error (' + result.status + '): ' + (result.data.error && result.data.error.message ? result.data.error.message : 'request failed');
+  } else if (result.data.choices && result.data.choices[0]) {
+    var replyText = result.data.choices[0].message.content;
+    sageMsg.textContent = replyText;
+    conversationHistory.push({ role: "model", parts: [{ text: replyText }] });
+  } else {
+    sageMsg.textContent = '⚠️ No response received from Sage.';
+  }
+  sageMsg.style.cssText = 'background-color:#7F77DD; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%; clear:both;';
+  chatbox.appendChild(sageMsg);
+  chatbox.scrollTop = chatbox.scrollHeight;
+}).catch(function(err) {
+  var sageMsg = document.createElement('p');
+  sageMsg.textContent = '⚠️ Network error: ' + err.message;
+  sageMsg.style.cssText = 'background-color:#7F77DD; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%; clear:both;';
+  chatbox.appendChild(sageMsg);
+  chatbox.scrollTop = chatbox.scrollHeight;
+});
 
-    .then(function(response) {
-      return response.json().then(function(data) {
-        return { ok: response.ok, status: response.status, data: data };
-      });
-    })
-    .then(function(result) {
-      var sageMsg = document.createElement('p');
-      if (!result.ok) {
-        sageMsg.textContent = '⚠️ API error (' + result.status + '): ' + (result.data.error && result.data.error.message ? result.data.error.message : 'request failed');
-      } else if (result.data.choices && result.data.choices[0]) {
-       var replyText = result.data.choices[0].message.content;
-        sageMsg.textContent = replyText;
-        conversationHistory.push({ role: "model", parts: [{ text: replyText }] });
-      } else {
-        sageMsg.textContent = '⚠️ No response received from Sage.';
-      }
-      sageMsg.style.cssText = 'background-color:#7F77DD; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%; clear:both;';
-      chatbox.appendChild(sageMsg);
-      chatbox.scrollTop = chatbox.scrollHeight;
-    })
-    .catch(function(err) {
-      var sageMsg = document.createElement('p');
-      sageMsg.textContent = '⚠️ Network error: ' + err.message;
-      sageMsg.style.cssText = 'background-color:#7F77DD; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%; clear:both;';
-      chatbox.appendChild(sageMsg);
-      chatbox.scrollTop = chatbox.scrollHeight;
-    });
 
 </script>
 
