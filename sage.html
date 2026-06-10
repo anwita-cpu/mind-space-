@@ -66,8 +66,9 @@
 </div>
 
    <script>
-  var API_KEY = sessionStorage.getItem('sage_api_key') || prompt('Enter your Gemini API key:');
-  if (API_KEY) sessionStorage.setItem('sage_api_key', API_KEY);
+   const API_KEY = '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';
+  const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+   const MODEL = 'llama3-8b-8192';
 
   var conversationHistory = [];
 
@@ -89,15 +90,18 @@
 
     conversationHistory.push({ role: "user", parts: [{ text: userText }] });
 
-    fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + API_KEY, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system_instruction: {
-          parts: [{ text: "You are Sage, a kind and supportive friend in the MindSpace app. You talk to teens who are going through tough times. You listen, you are warm, you never judge. You speak casually like a friend, not a therapist. You use simple language. Keep responses short, 2-3 sentences max. Vary your wording naturally instead of repeating the same phrases — respond freshly based on what the person actually said and the flow of the conversation so far. If someone seems like they are in danger or crisis, gently encourage them to talk to a trusted adult or call a helpline. Never give medical advice. Always remind them that their feelings are valid." }]
-        },
-        contents: conversationHistory
-      })
+    fetch(API_URL, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY },
+  body: JSON.stringify({
+    model: MODEL,
+    messages: [
+      { role: 'system', content: 'You are Sage, a kind and supportive friend in the MindSpace app. You talk to teens who are going through tough times. You listen, you are warm, you are never judgemental.' },
+      ...conversationHistory.map(function(m) { return { role: m.role === 'model' ? 'assistant' : 'user', content: m.parts[0].text }; })
+    ],
+    max_tokens: 500
+  })
+})
     })
     .then(function(response) {
       return response.json().then(function(data) {
@@ -108,8 +112,8 @@
       var sageMsg = document.createElement('p');
       if (!result.ok) {
         sageMsg.textContent = '⚠️ API error (' + result.status + '): ' + (result.data.error && result.data.error.message ? result.data.error.message : 'request failed');
-      } else if (result.data.candidates && result.data.candidates[0] && result.data.candidates[0].content) {
-        var replyText = result.data.candidates[0].content.parts[0].text;
+      } else if (result.data.choices && result.data.choices[0]) {
+       var replyText = result.data.choices[0].message.content;
         sageMsg.textContent = replyText;
         conversationHistory.push({ role: "model", parts: [{ text: replyText }] });
       } else {
