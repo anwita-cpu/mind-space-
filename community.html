@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mindspace — Community</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #0a0a0f;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+    }
+
+    nav {
+      background-color: rgba(26,26,46,0.95);
+      backdrop-filter: blur(6px);
+      padding: 15px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a { color: white; text-decoration: none; font-size: 16px; opacity: 0.8; }
+    nav a:hover { opacity: 1; }
+
+    .page {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .header { text-align: center; margin-bottom: 36px; }
+    .header h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+    .header p { font-size: 14px; opacity: 0.5; line-height: 1.6; }
+
+    .compose {
+      background: rgba(26,26,46,0.88);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 32px;
+    }
+
+    .compose p {
+      font-size: 13px;
+      opacity: 0.45;
+      margin-bottom: 12px;
+    }
+
+    textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      padding: 14px;
+      resize: none;
+      outline: none;
+      line-height: 1.6;
+      transition: border-color .2s;
+    }
+    textarea:focus { border-color: rgba(127,119,221,0.5); }
+    textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+    .compose-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .char-count { font-size: 12px; opacity: 0.3; }
+
+    .send-btn {
+      background: #7F77DD;
+      border: none;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+    .send-btn:hover { opacity: 0.88; transform: scale(1.03); }
+    .send-btn:disabled { opacity: 0.35; cursor: default; transform: none; }
+
+    .status-msg {
+      font-size: 13px;
+      text-align: center;
+      margin: -16px 0 20px;
+      min-height: 20px;
+      opacity: 0;
+      transition: opacity .4s;
+    }
+    .status-msg.show { opacity: 1; }
+    .status-msg.green { color: #5DCAA5; }
+    .status-msg.red { color: #F09595; }
+    .status-msg.yellow { color: #FAC775; }
+
+    .feed-label {
+      font-size: 11px;
+      opacity: 0.3;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .post-card {
+      background: rgba(26,26,46,0.7);
+      border: 0.5px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      animation: fadeIn .4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .post-text {
+      font-size: 15px;
+      line-height: 1.7;
+      opacity: 0.9;
+      margin-bottom: 14px;
+    }
+
+    .post-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      opacity: 0.35;
+    }
+
+    .reply-toggle {
+      background: none;
+      border: 0.5px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.5);
+      border-radius: 99px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .reply-toggle:hover { background: rgba(255,255,255,0.07); }
+
+    .delete-btn {
+      background: none;
+      border: 0.5px solid rgba(240,149,149,0.3);
+      color: rgba(240,149,149,0.6);
+      border-radius: 99px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .delete-btn:hover { background: rgba(240,149,149,0.1); }
+    .delete-btn:disabled { opacity: 0.3; cursor: default; }
+
+    .replies { margin-top: 14px; }
+
+    .reply-card {
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+      opacity: 0.8;
+      animation: fadeIn .3s ease;
+    }
+
+    .reply-compose {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .reply-input {
+      flex: 1;
+      background: rgba(255,255,255,0.06);
+      border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 99px;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      padding: 8px 16px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .reply-input:focus { border-color: rgba(127,119,221,0.5); }
+    .reply-input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .reply-send {
+      background: rgba(127,119,221,0.3);
+      border: none;
+      color: white;
+      border-radius: 99px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .reply-send:hover { background: rgba(127,119,221,0.5); }
+    .reply-send:disabled { opacity: 0.35; cursor: default; }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      opacity: 0.3;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      opacity: 0.3;
+      font-size: 14px;
+    }
+
+    .checking-msg {
+      font-size: 12px;
+      opacity: 0.4;
+      margin-top: 8px;
+      min-height: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="sage.html">Sage</a>
+  <a href="tracker.html">Mood</a>
+  <a href="toolkit.html">Coping</a>
+  <a href="community.html">Community</a>
+  <a href="vent.html">Vent</a>
+</nav>
+
+<div class="page">
+  <div class="header">
+    <h1>You're not alone 🤍</h1>
+    <p>A quiet space to share what you're feeling.<br>Everyone here is going through something too.</p>
+  </div>
+
+  <div class="compose">
+    <p>Share something — anonymously, safely.</p>
+    <textarea id="postInput" rows="3" maxlength="280" placeholder="What's on your mind today..."></textarea>
+    <div class="checking-msg" id="checkingMsg"></div>
+    <div class="compose-footer">
+      <span class="char-count" id="charCount">0 / 280</span>
+      <button class="send-btn" id="sendBtn" onclick="submitPost()">Share</button>
+    </div>
+  </div>
+
+  <div class="status-msg" id="statusMsg"></div>
+
+  <p class="feed-label">Recent thoughts</p>
+  <div id="feed"><div class="loading">loading...</div></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, getDocs, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdM39QjJ0m3f9wob5qqacgHpnihMIfsW0",
+    authDomain: "mindspace-18083.firebaseapp.com",
+    projectId: "mindspace-18083",
+    storageBucket: "mindspace-18083.firebasestorage.app",
+    messagingSenderId: "1091007788631",
+    appId: "1:1091007788631:web:57a22d804d3787b5685512"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const GEMINI_KEY = 'AQ.Ab8RN6J-Sz5ITebnZ89hQ98_cGYXKDTWnWVeEonIUU5eigOeQA';
+
+  var myPostIds = new Set();
+
+  document.getElementById('postInput').addEventListener('input', function() {
+    document.getElementById('charCount').textContent = this.value.length + ' / 280';
+  });
+
+  async function cleanOldPosts() {
+    var cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    var q = query(collection(db, 'posts'), where('createdAt', '<', cutoff));
+    var snap = await getDocs(q);
+    snap.forEach(async function(d) { await deleteDoc(doc(db, 'posts', d.id)); });
+  }
+
+  async function checkWithSage(text) {
+    var prompt = `You are a safety moderator for a teen mental health app called MindSpace.
+A user wants to post this message: "${text}"
+
+Reply with ONLY one word:
+- "safe" if it's a genuine emotional expression, feeling, or supportive message
+- "mean" if it's cruel, bullying, mocking, or could hurt someone
+- "unrelated" if it has nothing to do with emotions, mental health, or support (e.g. spam, random topics)
+- "crisis" if the person seems to be in immediate danger or expressing suicidal intent
+
+One word only. No punctuation.`;
+
+    try {
+      var res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      var data = await res.json();
+      var verdict = data.contents?.[0]?.parts?.[0]?.text || data.candidates?.[0]?.content?.parts?.[0]?.text || 'safe';
+      return verdict.trim().toLowerCase().replace(/[^a-z]/g, '');
+    } catch(e) {
+      return 'safe';
+    }
+  }
+
+  async function checkReply(text) {
+    var prompt = `You are a safety moderator for a teen mental health app.
+A user wants to post this reply: "${text}"
+Reply with ONLY one word: "safe", "mean", "unrelated", or "crisis". No punctuation.`;
+    try {
+      var res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      var data = await res.json();
+      var verdict = data.contents?.[0]?.parts?.[0]?.text || data.candidates?.[0]?.content?.parts?.[0]?.text || 'safe';
+      return verdict.trim().toLowerCase().replace(/[^a-z]/g, '');
+    } catch(e) { return 'safe'; }
+  }
+
+  function showStatus(msg, type) {
+    var el = document.getElementById('statusMsg');
+    el.textContent = msg;
+    el.className = 'status-msg show ' + type;
+    setTimeout(function() { el.classList.remove('show'); }, 3500);
+  }
+
+  window.submitPost = async function() {
+    var input = document.getElementById('postInput');
+    var text = input.value.trim();
+    if (!text) return;
+
+    var btn = document.getElementById('sendBtn');
+    var checking = document.getElementById('checkingMsg');
+    btn.disabled = true;
+    checking.textContent = 'Sage is reading this...';
+
+    var verdict = await checkWithSage(text);
+    checking.textContent = '';
+
+    if (verdict === 'mean') {
+      showStatus('This might not land the way you intend — maybe try rewording it? 💙', 'yellow');
+      btn.disabled = false;
+      return;
+    }
+    if (verdict === 'unrelated') {
+      showStatus('This space is just for feelings and support 🌿', 'yellow');
+      btn.disabled = false;
+      return;
+    }
+    if (verdict === 'crisis') {
+      showStatus('It sounds like you might need some support right now. Please talk to Sage 💙', 'red');
+      setTimeout(function() { window.location.href = 'sage.html'; }, 2500);
+      btn.disabled = false;
+      return;
+    }
+
+    try {
+      var newRef = await addDoc(collection(db, 'posts'), {
+        text: text,
+        createdAt: serverTimestamp(),
+      });
+      myPostIds.add(newRef.id);
+      input.value = '';
+      document.getElementById('charCount').textContent = '0 / 280';
+      showStatus('Your words are out there 🌸', 'green');
+    } catch(e) {
+      showStatus('Something went wrong — try again', 'red');
+    }
+    btn.disabled = false;
+  };
+
+  window.submitReply = async function(postId, inputEl, btn) {
+    var text = inputEl.value.trim();
+    if (!text) return;
+    btn.disabled = true;
+    inputEl.placeholder = 'Sage is reading...';
+
+    var verdict = await checkReply(text);
+    inputEl.placeholder = 'Send some support...';
+
+    if (verdict === 'mean') {
+      inputEl.value = '';
+      inputEl.placeholder = 'That might hurt — try something kinder 💙';
+      btn.disabled = false;
+      return;
+    }
+    if (verdict === 'unrelated') {
+      inputEl.value = '';
+      inputEl.placeholder = 'Keep replies supportive 🌿';
+      btn.disabled = false;
+      return;
+    }
+    if (verdict === 'crisis') {
+      inputEl.value = '';
+      inputEl.placeholder = 'Please reach out to Sage 💙';
+      btn.disabled = false;
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, 'posts', postId, 'replies'), {
+        text: text,
+        createdAt: serverTimestamp(),
+      });
+      inputEl.value = '';
+    } catch(e) {}
+    btn.disabled = false;
+  };
+
+  window.deletePost = async function(postId, btn) {
+    btn.disabled = true;
+    btn.textContent = 'deleting...';
+    try {
+      await deleteDoc(doc(db, 'posts', postId));
+      myPostIds.delete(postId);
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = '🗑 delete';
+    }
+  };
+
+  window.toggleReplies = async function(postId, btn) {
+    var repliesDiv = document.getElementById('replies-' + postId);
+    var replyList = document.getElementById('replyList-' + postId);
+    if (repliesDiv.style.display === 'none') {
+      repliesDiv.style.display = 'block';
+      btn.textContent = '✕ close';
+      var q = query(collection(db, 'posts', postId, 'replies'), orderBy('createdAt', 'asc'));
+      onSnapshot(q, function(snap) {
+        replyList.innerHTML = '';
+        snap.forEach(function(r) {
+          var rd = r.data();
+          var rdiv = document.createElement('div');
+          rdiv.className = 'reply-card';
+          rdiv.textContent = rd.text;
+          replyList.appendChild(rdiv);
+        });
+      });
+    } else {
+      repliesDiv.style.display = 'none';
+      btn.textContent = '💬 reply';
+    }
+  };
+
+  function escapeHtml(t) {
+    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function timeAgo(ts) {
+    if (!ts) return 'just now';
+    var diff = Math.floor((Date.now() - ts.toDate()) / 1000);
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+    return Math.floor(diff/86400) + 'd ago';
+  }
+
+  function renderPost(postDoc) {
+    var d = postDoc.data();
+    var id = postDoc.id;
+    var isMine = myPostIds.has(id);
+    var div = document.createElement('div');
+    div.className = 'post-card';
+    div.id = 'post-' + id;
+    div.innerHTML = `
+      <p class="post-text">${escapeHtml(d.text)}</p>
+      <div class="post-meta">
+        <span>${timeAgo(d.createdAt)}</span>
+        <div style="display:flex; gap:8px; align-items:center;">
+          ${isMine ? `<button class="delete-btn" onclick="deletePost('${id}', this)">🗑 delete</button>` : ''}
+          <button class="reply-toggle" onclick="toggleReplies('${id}', this)">💬 reply</button>
+        </div>
+      </div>
+      <div class="replies" id="replies-${id}" style="display:none">
+        <div id="replyList-${id}"></div>
+        <div class="reply-compose">
+          <input class="reply-input" id="replyInput-${id}" type="text" maxlength="200" placeholder="Send some support...">
+          <button class="reply-send" id="replyBtn-${id}" onclick="submitReply('${id}', document.getElementById('replyInput-${id}'), this)">send</button>
+        </div>
+      </div>
+    `;
+    return div;
+  }
+
+  cleanOldPosts();
+  var q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
+  onSnapshot(q, function(snap) {
+    var feed = document.getElementById('feed');
+    if (snap.empty) {
+      feed.innerHTML = '<div class="empty-state">No posts yet.<br>Be the first to share something. 🌸</div>';
+      return;
+    }
+    feed.innerHTML = '';
+    snap.forEach(function(d) {
+      feed.appendChild(renderPost(d));
+    });
+  });
+</script>
+
+</body>
+</html>
