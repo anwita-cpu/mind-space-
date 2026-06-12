@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mood Tracker — MindSpace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #0a0a0f;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    nav {
+      background-color: rgba(26,26,46,0.95);
+      backdrop-filter: blur(6px);
+      padding: 15px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a { color: white; text-decoration: none; font-size: 16px; opacity: 0.8; }
+    nav a:hover { opacity: 1; }
+
+    .page {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .header h1 { font-size: 26px; font-weight: 600; margin-bottom: 8px; }
+    .header p { font-size: 14px; opacity: 0.45; }
+
+    .question {
+      background: rgba(26,26,46,0.88);
+      border: 0.5px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .question h2 {
+      font-size: 15px;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-bottom: 16px;
+    }
+
+    .emojis {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .emoji-btn {
+      font-size: 32px;
+      background: rgba(255,255,255,0.04);
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s, background 0.2s;
+      line-height: 1;
+    }
+    .emoji-btn:hover { transform: scale(1.2); border-color: rgba(127,119,221,0.5); }
+    .emoji-btn.selected {
+      border-color: #7F77DD;
+      background: rgba(127,119,221,0.2);
+      transform: scale(1.15);
+    }
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      background: #7F77DD;
+      color: white;
+      border: none;
+      padding: 16px;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      border-radius: 14px;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: opacity .2s, transform .15s;
+    }
+    .submit-btn:hover { opacity: 0.88; transform: scale(1.02); }
+    .submit-btn:disabled { opacity: 0.35; cursor: default; transform: none; }
+
+    .already-done {
+      text-align: center;
+      padding: 40px 20px;
+      background: rgba(26,26,46,0.88);
+      border: 0.5px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      margin-bottom: 24px;
+    }
+    .already-done p { font-size: 15px; opacity: 0.7; margin-bottom: 6px; }
+    .already-done span { font-size: 13px; opacity: 0.35; }
+
+    /* History section */
+    .history-label {
+      font-size: 11px;
+      opacity: 0.3;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin: 32px 0 16px;
+    }
+
+    .history-card {
+      background: rgba(26,26,46,0.7);
+      border: 0.5px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      animation: fadeIn .4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .history-date {
+      font-size: 12px;
+      opacity: 0.35;
+      margin-bottom: 10px;
+    }
+
+    .history-emojis {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 24px;
+    }
+
+    .empty-history {
+      text-align: center;
+      opacity: 0.3;
+      font-size: 14px;
+      padding: 20px;
+    }
+
+    .status-msg {
+      text-align: center;
+      font-size: 14px;
+      color: #5DCAA5;
+      margin-top: 12px;
+      min-height: 20px;
+      opacity: 0;
+      transition: opacity .4s;
+    }
+    .status-msg.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="sage.html">Sage</a>
+  <a href="tracker.html">Mood</a>
+  <a href="toolkit.html">Coping</a>
+  <a href="vent.html">Vent</a>
+  <a href="community.html">Community</a>
+  <a href="memory.html">Memory</a>
+</nav>
+
+<div class="page">
+  <div class="header">
+    <h1>📊 Mood Tracker</h1>
+    <p>Check in daily and spot patterns over time.</p>
+  </div>
+
+  <div id="formSection">
+    <div class="question">
+      <h2>How are you feeling right now?</h2>
+      <div class="emojis" data-q="feeling">
+        <button class="emoji-btn" data-val="1">😢</button>
+        <button class="emoji-btn" data-val="2">😔</button>
+        <button class="emoji-btn" data-val="3">😐</button>
+        <button class="emoji-btn" data-val="4">🙂</button>
+        <button class="emoji-btn" data-val="5">😊</button>
+      </div>
+    </div>
+
+    <div class="question">
+      <h2>How motivated did you feel today?</h2>
+      <div class="emojis" data-q="motivation">
+        <button class="emoji-btn" data-val="1">😴</button>
+        <button class="emoji-btn" data-val="2">😕</button>
+        <button class="emoji-btn" data-val="3">😐</button>
+        <button class="emoji-btn" data-val="4">💡</button>
+        <button class="emoji-btn" data-val="5">🔥</button>
+      </div>
+    </div>
+
+    <div class="question">
+      <h2>How much did you enjoy your day?</h2>
+      <div class="emojis" data-q="enjoyment">
+        <button class="emoji-btn" data-val="1">😭</button>
+        <button class="emoji-btn" data-val="2">😔</button>
+        <button class="emoji-btn" data-val="3">😐</button>
+        <button class="emoji-btn" data-val="4">🙂</button>
+        <button class="emoji-btn" data-val="5">🎉</button>
+      </div>
+    </div>
+
+    <div class="question">
+      <h2>Did you eat well today?</h2>
+      <div class="emojis" data-q="eating">
+        <button class="emoji-btn" data-val="1">🍕</button>
+        <button class="emoji-btn" data-val="2">😕</button>
+        <button class="emoji-btn" data-val="3">😐</button>
+        <button class="emoji-btn" data-val="4">🙂</button>
+        <button class="emoji-btn" data-val="5">🥗</button>
+      </div>
+    </div>
+
+    <div class="question">
+      <h2>How connected did you feel to friends or family?</h2>
+      <div class="emojis" data-q="connection">
+        <button class="emoji-btn" data-val="1">💔</button>
+        <button class="emoji-btn" data-val="2">😔</button>
+        <button class="emoji-btn" data-val="3">😐</button>
+        <button class="emoji-btn" data-val="4">🙂</button>
+        <button class="emoji-btn" data-val="5">🥰</button>
+      </div>
+    </div>
+
+    <div class="question">
+      <h2>How well did you sleep last night?</h2>
+      <div class="emojis" data-q="sleep">
+        <button class="emoji-btn" data-val="1">😵</button>
+        <button class="emoji-btn" data-val="2">😩</button>
+        <button class="emoji-btn" data-val="3">😐</button>
+        <button class="emoji-btn" data-val="4">😊</button>
+        <button class="emoji-btn" data-val="5">⭐</button>
+      </div>
+    </div>
+
+    <div class="question">
+      <h2>Did you feel lonely today?</h2>
+      <div class="emojis" data-q="loneliness">
+        <button class="emoji-btn" data-val="1">💔</button>
+        <button class="emoji-btn" data-val="2">😞</button>
+        <button class="emoji-btn" data-val="3">😐</button>
+        <button class="emoji-btn" data-val="4">🙂</button>
+        <button class="emoji-btn" data-val="5">🫂</button>
+      </div>
+    </div>
+
+    <div class="question">
+      <h2>How is your energy level today?</h2>
+      <div class="emojis" data-q="energy">
+        <button class="emoji-btn" data-val="1">🪫</button>
+        <button class="emoji-btn" data-val="2">😩</button>
+        <button class="emoji-btn" data-val="3">😐</button>
+        <button class="emoji-btn" data-val="4">⚡</button>
+        <button class="emoji-btn" data-val="5">🚀</button>
+      </div>
+    </div>
+
+    <div class="question">
+      <h2>How anxious are you feeling?</h2>
+      <div class="emojis" data-q="anxiety">
+        <button class="emoji-btn" data-val="1">😰</button>
+        <button class="emoji-btn" data-val="2">😕</button>
+        <button class="emoji-btn" data-val="3">😐</button>
+        <button class="emoji-btn" data-val="4">🙂</button>
+        <button class="emoji-btn" data-val="5">🥰</button>
+      </div>
+    </div>
+
+    <div class="question">
+      <h2>How hopeful do you feel about tomorrow?</h2>
+      <div class="emojis" data-q="hope">
+        <button class="emoji-btn" data-val="1">😞</button>
+        <button class="emoji-btn" data-val="2">😟</button>
+        <button class="emoji-btn" data-val="3">😐</button>
+        <button class="emoji-btn" data-val="4">🌤️</button>
+        <button class="emoji-btn" data-val="5">🌈</button>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitMood()">Submit ✨</button>
+    <p class="status-msg" id="statusMsg"></p>
+  </div>
+
+  <div id="alreadyDone" style="display:none" class="already-done">
+    <p>✅ You've already checked in today!</p>
+    <span>Come back tomorrow 🌿</span>
+  </div>
+
+  <p class="history-label">Your recent check-ins</p>
+  <div id="historyFeed"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdM39QjJ0m3f9wob5qqacgHpnihMIfsW0",
+    authDomain: "mindspace-18083.firebaseapp.com",
+    projectId: "mindspace-18083",
+    storageBucket: "mindspace-18083.firebasestorage.app",
+    messagingSenderId: "1091007788631",
+    appId: "1:1091007788631:web:57a22d804d3787b5685512"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // emoji selection
+  document.querySelectorAll('.emojis').forEach(function(group) {
+    group.querySelectorAll('.emoji-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        group.querySelectorAll('.emoji-btn').forEach(function(b) { b.classList.remove('selected'); });
+        this.classList.add('selected');
+      });
+    });
+  });
+
+  // check if already done today
+  var today = new Date().toDateString();
+  if (localStorage.getItem('ms_tracker_done') === today) {
+    document.getElementById('formSection').style.display = 'none';
+    document.getElementById('alreadyDone').style.display = 'block';
+  }
+
+  window.submitMood = async function() {
+    var responses = {};
+    var allAnswered = true;
+    document.querySelectorAll('.emojis').forEach(function(group) {
+      var q = group.getAttribute('data-q');
+      var selected = group.querySelector('.emoji-btn.selected');
+      if (selected) {
+        responses[q] = { emoji: selected.textContent.trim(), val: parseInt(selected.getAttribute('data-val')) };
+      } else {
+        allAnswered = false;
+      }
+    });
+
+    if (!allAnswered) {
+      var msg = document.getElementById('statusMsg');
+      msg.textContent = '⚠️ Please answer all questions before submitting!';
+      msg.style.color = '#F09595';
+      msg.classList.add('show');
+      setTimeout(function() { msg.classList.remove('show'); }, 3000);
+      return;
+    }
+
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    try {
+      await addDoc(collection(db, 'moods'), {
+        responses: responses,
+        createdAt: serverTimestamp(),
+        userId: localStorage.getItem('ms_user_id') || 'anonymous'
+      });
+      localStorage.setItem('ms_tracker_done', today);
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('alreadyDone').style.display = 'block';
+      loadHistory();
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = 'Submit ✨';
+      var msg = document.getElementById('statusMsg');
+      msg.textContent = '⚠️ Something went wrong. Try again.';
+      msg.style.color = '#F09595';
+      msg.classList.add('show');
+    }
+  };
+
+  async function loadHistory() {
+    var q = query(collection(db, 'moods'), orderBy('createdAt', 'desc'), limit(7));
+    var snap = await getDocs(q);
+    var feed = document.getElementById('historyFeed');
+    if (snap.empty) {
+      feed.innerHTML = '<div class="empty-history">No check-ins yet. Submit your first one! 🌿</div>';
+      return;
+    }
+    feed.innerHTML = '';
+    snap.forEach(function(d) {
+      var data = d.data();
+      var card = document.createElement('div');
+      card.className = 'history-card';
+      var date = data.createdAt ? data.createdAt.toDate().toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' }) : 'Recently';
+      var emojis = Object.values(data.responses).map(function(r) { return r.emoji; }).join(' ');
+      card.innerHTML = '<div class="history-date">' + date + '</div><div class="history-emojis">' + emojis + '</div>';
+      feed.appendChild(card);
+    });
+  }
+
+  loadHistory();
+</script>
+
+</body>
+</html>
