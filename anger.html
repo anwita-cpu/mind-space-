@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Anger Help - MindSpace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      text-align: center;
+      padding: 50px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    nav {
+      background-color: #1a1a2e;
+      padding: 15px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin: -50px -50px 50px -50px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    h1 { font-size: 36px; margin-bottom: 10px; }
+    p { font-size: 16px; opacity: 0.7; }
+
+    /* Breathe circle */
+    #breatheSection { margin: 40px auto; }
+
+    #breatheCircle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #7F77DD, #3c3489);
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      transition: transform 4s ease-in-out;
+      box-shadow: 0 0 40px rgba(127,119,221,0.4);
+    }
+
+    #breatheCircle.expand { transform: scale(1.6); }
+    #breatheCircle.contract { transform: scale(1); }
+
+    #breatheLabel {
+      font-size: 18px;
+      opacity: 0.8;
+      margin-bottom: 10px;
+      min-height: 28px;
+    }
+
+    #breatheCount {
+      font-size: 13px;
+      opacity: 0.35;
+      margin-bottom: 24px;
+    }
+
+    /* Steps */
+    #stepsSection {
+      display: none;
+      margin: 40px auto;
+      max-width: 480px;
+    }
+
+    .step-card {
+      background-color: #1a1a2e;
+      border-radius: 15px;
+      padding: 28px;
+      font-size: 22px;
+      margin-bottom: 10px;
+      animation: fadeIn .5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-sub {
+      font-size: 14px;
+      opacity: 0.5;
+      margin-top: 8px;
+    }
+
+    /* Final */
+    #finalMsg {
+      display: none;
+      font-size: 22px;
+      color: #7F77DD;
+      margin-top: 40px;
+      line-height: 1.8;
+    }
+
+    /* Buttons */
+    .purple-btn {
+      background-color: #7F77DD;
+      border: none;
+      color: white;
+      padding: 15px 40px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      margin-top: 20px;
+      transition: opacity .2s, transform .15s;
+    }
+    .purple-btn:hover { opacity: 0.88; transform: scale(1.03); }
+    .purple-btn:disabled { opacity: 0.35; cursor: default; transform: none; }
+
+    /* Tap to release */
+    #tapSection {
+      display: none;
+      margin: 30px auto;
+    }
+
+    #tapBtn {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: #1a1a2e;
+      border: 3px solid #7F77DD;
+      color: white;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: transform .1s, background .2s;
+      box-shadow: 0 0 30px rgba(127,119,221,0.2);
+    }
+    #tapBtn:active { transform: scale(0.93); background: #2a2a4a; }
+
+    #tapCount { font-size: 13px; opacity: 0.35; margin-top: 14px; }
+
+    /* Progress dots */
+    #dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 24px 0;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      transition: background .3s;
+    }
+    .dot.active { background: #7F77DD; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="toolkit.html">← Toolkit</a>
+</nav>
+
+<h1>😤 Anger & Frustration</h1>
+<p>Let's work through it together — step by step.</p>
+
+<!-- Progress dots -->
+<div id="dots">
+  <div class="dot active" id="dot0"></div>
+  <div class="dot" id="dot1"></div>
+  <div class="dot" id="dot2"></div>
+  <div class="dot" id="dot3"></div>
+</div>
+
+<!-- Step 1: Breathing -->
+<div id="breatheSection">
+  <p style="margin-bottom:28px; font-size:14px; opacity:0.5;">Step 1 — Breathe with the circle</p>
+  <div id="breatheCircle">breathe in</div>
+  <p id="breatheLabel"></p>
+  <p id="breatheCount"></p>
+  <button class="purple-btn" id="startBreathBtn" onclick="startBreathing()">Start breathing</button>
+</div>
+
+<!-- Step 2: Tap to release -->
+<div id="tapSection">
+  <p style="margin-bottom:28px; font-size:14px; opacity:0.5;">Step 2 — Tap to release the tension</p>
+  <p style="font-size:15px; opacity:0.7; margin-bottom:24px;">Tap the circle as many times as you need — let it all out.</p>
+  <button id="tapBtn" onclick="tapRelease()">Tap to<br>release 💢</button>
+  <p id="tapCount"></p>
+  <br>
+  <button class="purple-btn" onclick="showSteps()" style="margin-top:24px;">I'm ready to continue</button>
+</div>
+
+<!-- Step 3: Cool down steps -->
+<div id="stepsSection">
+  <p style="margin-bottom:28px; font-size:14px; opacity:0.5;">Step 3 — Cool down</p>
+  <div class="step-card" id="stepCard"></div>
+  <button class="purple-btn" id="stepBtn" onclick="nextStep()">Next</button>
+</div>
+
+<!-- Final -->
+<div id="finalMsg">
+  You handled that 💜<br>
+  <span style="font-size:16px; opacity:0.6;">Anger is valid. You just chose to work through it.</span><br><br>
+  <button class="purple-btn" onclick="window.location.href='toolkit.html'">Back to toolkit</button>
+</div>
+
+<script>
+  // ---- BREATHING ----
+  var breathCycles = 0;
+  var breathTarget = 3;
+  var breathing = false;
+  var breathTimer = null;
+
+  function startBreathing() {
+    if (breathing) return;
+    breathing = true;
+    document.getElementById('startBreathBtn').style.display = 'none';
+    runBreathCycle();
+  }
+
+  function runBreathCycle() {
+    if (breathCycles >= breathTarget) {
+      document.getElementById('breatheLabel').textContent = 'Well done 💜';
+      document.getElementById('breatheCount').textContent = '';
+      setTimeout(function() {
+        document.getElementById('breatheSection').style.display = 'none';
+        document.getElementById('tapSection').style.display = 'block';
+        setDot(1);
+      }, 1500);
+      return;
+    }
+
+    breathCycles++;
+    document.getElementById('breatheCount').textContent = 'Cycle ' + breathCycles + ' of ' + breathTarget;
+
+    var circle = document.getElementById('breatheCircle');
+    var label = document.getElementById('breatheLabel');
+
+    // Breathe in — 4s
+    circle.textContent = 'breathe in';
+    label.textContent = 'Breathe in slowly...';
+    circle.classList.remove('contract');
+    circle.classList.add('expand');
+
+    setTimeout(function() {
+      // Hold — 4s
+      circle.textContent = 'hold';
+      label.textContent = 'Hold...';
+    }, 4000);
+
+    setTimeout(function() {
+      // Breathe out — 4s
+      circle.textContent = 'breathe out';
+      label.textContent = 'Breathe out slowly...';
+      circle.classList.remove('expand');
+      circle.classList.add('contract');
+    }, 8000);
+
+    setTimeout(function() {
+      runBreathCycle();
+    }, 12000);
+  }
+
+  // ---- TAP RELEASE ----
+  var tapTotal = 0;
+  function tapRelease() {
+    tapTotal++;
+    var btn = document.getElementById('tapBtn');
+    var msgs = ['💢', '💥', '😤', '🔥', '💢💢', '😤💢', '💥💥'];
+    btn.innerHTML = msgs[tapTotal % msgs.length] + '<br><span style="font-size:13px">Tap to release</span>';
+    document.getElementById('tapCount').textContent = tapTotal + ' taps';
+  }
+
+  // ---- COOL DOWN STEPS ----
+  var steps = [
+    { text: '🌡️ Notice where you feel the anger in your body', sub: 'Chest? Jaw? Shoulders? Just observe it.' },
+    { text: '💧 Drink some water if you can', sub: 'Even a small sip helps your body reset.' },
+    { text: '🔢 Count slowly from 10 to 1', sub: '10... 9... 8... take your time.' },
+    { text: '✍️ What triggered this feeling?', sub: 'You don\'t have to fix it — just name it.' },
+    { text: '🌿 One thing you CAN control right now', sub: 'Focus only on what\'s in your hands.' },
+  ];
+  var currentStep = 0;
+
+  function showSteps() {
+    document.getElementById('tapSection').style.display = 'none';
+    document.getElementById('stepsSection').style.display = 'block';
+    setDot(2);
+    showStep();
+  }
+
+  function showStep() {
+    var s = steps[currentStep];
+    document.getElementById('stepCard').innerHTML = s.text + '<div class="step-sub">' + s.sub + '</div>';
+    document.getElementById('stepBtn').textContent = currentStep < steps.length - 1 ? 'Next' : 'Done ✨';
+  }
+
+  function nextStep() {
+    currentStep++;
+    if (currentStep >= steps.length) {
+      document.getElementById('stepsSection').style.display = 'none';
+      document.getElementById('finalMsg').style.display = 'block';
+      setDot(3);
+    } else {
+      showStep();
+    }
+  }
+
+  function setDot(n) {
+    for (var i = 0; i < 4; i++) {
+      document.getElementById('dot' + i).className = 'dot' + (i <= n ? ' active' : '');
+    }
+  }
+</script>
+
+</body>
+</html>
