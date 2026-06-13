@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Can't Sleep - MindSpace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #05050d;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    nav {
+      background-color: rgba(10,10,20,0.95);
+      padding: 15px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+    nav a { color: white; text-decoration: none; font-size: 16px; opacity: 0.6; }
+    nav a:hover { opacity: 1; }
+
+    .page {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; opacity: 0.4; margin-bottom: 40px; }
+
+    /* Progress dots */
+    #dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 36px;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      transition: background .5s;
+    }
+    .dot.active { background: rgba(127,119,221,0.7); }
+
+    /* Sections */
+    .section { display: none; animation: fadeIn .6s ease; }
+    .section.show { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      opacity: 0.3;
+      margin-bottom: 16px;
+    }
+
+    /* Brain dump */
+    #dumpBox {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      padding: 18px;
+      resize: none;
+      outline: none;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      transition: border-color .3s;
+    }
+    #dumpBox:focus { border-color: rgba(127,119,221,0.3); }
+    #dumpBox::placeholder { color: rgba(255,255,255,0.18); }
+
+    /* Close tab animation */
+    #closeSection { position: relative; }
+
+    #worryCard {
+      background: rgba(26,26,46,0.9);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.8;
+      opacity: 0.8;
+      margin-bottom: 20px;
+      text-align: left;
+      max-height: 160px;
+      overflow: hidden;
+      transition: opacity 1s, transform 1s;
+    }
+    #worryCard.filed {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+
+    #fileMsg {
+      font-size: 15px;
+      color: rgba(127,119,221,0.8);
+      margin-bottom: 20px;
+      min-height: 24px;
+      opacity: 0;
+      transition: opacity .5s;
+    }
+    #fileMsg.show { opacity: 1; }
+
+    /* Breathing */
+    #breatheCircle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #3c3489, #1a1040);
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      transition: transform 4s ease-in-out;
+      box-shadow: 0 0 40px rgba(60,52,137,0.4);
+    }
+    #breatheCircle.expand { transform: scale(1.55); }
+    #breatheCircle.contract { transform: scale(1); }
+
+    #breatheLabel { font-size: 16px; opacity: 0.6; margin-bottom: 6px; min-height: 24px; }
+    #breatheCount { font-size: 12px; opacity: 0.25; margin-bottom: 24px; }
+
+    /* Sleep sounds */
+    #soundSection iframe {
+      width: 100%;
+      border-radius: 14px;
+      border: none;
+      margin-bottom: 16px;
+    }
+
+    .sleep-note {
+      font-size: 13px;
+      opacity: 0.35;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    /* Buttons */
+    .soft-btn {
+      background: rgba(127,119,221,0.15);
+      border: 0.5px solid rgba(127,119,221,0.3);
+      color: white;
+      border-radius: 99px;
+      padding: 12px 32px;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .soft-btn:hover { background: rgba(127,119,221,0.25); }
+    .soft-btn:disabled { opacity: 0.3; cursor: default; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="toolkit.html">← Toolkit</a>
+</nav>
+
+<div class="page">
+  <h1>🌙 Can't Sleep</h1>
+  <p class="subtitle">Let's quiet your mind, one step at a time.</p>
+
+  <div id="dots">
+    <div class="dot active" id="dot0"></div>
+    <div class="dot" id="dot1"></div>
+    <div class="dot" id="dot2"></div>
+    <div class="dot" id="dot3"></div>
+  </div>
+
+  <!-- Step 1: Brain dump -->
+  <div class="section show" id="step1">
+    <p class="section-title">Step 1 — Empty your mind</p>
+    <p style="font-size:14px; opacity:0.55; margin-bottom:18px;">Whatever is keeping you awake — type it all out. Every worry, every thought, every "what if". Get it out of your head and onto the screen.</p>
+    <textarea id="dumpBox" rows="6" placeholder="I can't stop thinking about...&#10;I'm worried that...&#10;Tomorrow I have to...&#10;&#10;Just let it all out."></textarea>
+    <button class="soft-btn" onclick="goToClose()">I'm done writing</button>
+  </div>
+
+  <!-- Step 2: Close the tab -->
+  <div class="section" id="step2">
+    <p class="section-title">Step 2 — File it away</p>
+    <p style="font-size:14px; opacity:0.55; margin-bottom:20px;">Your worries are real. But right now, there is nothing you can do about them. Let's put them away until tomorrow.</p>
+    <div id="worryCard"></div>
+    <p id="fileMsg"></p>
+    <button class="soft-btn" id="fileBtn" onclick="fileWorries()">File away until tomorrow</button>
+  </div>
+
+  <!-- Step 3: 4-7-8 breathing -->
+  <div class="section" id="step3">
+    <p class="section-title">Step 3 — 4-7-8 breathing</p>
+    <p style="font-size:14px; opacity:0.55; margin-bottom:24px;">This technique activates your body's natural calm response. Follow the circle.</p>
+    <div id="breatheCircle">ready</div>
+    <p id="breatheLabel"></p>
+    <p id="breatheCount"></p>
+    <button class="soft-btn" id="breatheStartBtn" onclick="startBreathing()">Begin</button>
+  </div>
+
+  <!-- Step 4: Sleep sounds -->
+  <div class="section" id="step4">
+    <p class="section-title">Step 4 — Drift off</p>
+    <p style="font-size:14px; opacity:0.55; margin-bottom:20px;">Put your phone face down, close your eyes, and let the sounds carry you.</p>
+    <iframe
+      width="100%"
+      height="160"
+      src="https://www.youtube.com/embed/MrM8-EJnV0I?autoplay=1&controls=1&rel=0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+    <p class="sleep-note">Tokyo rain sounds + lofi music. 8 hours. You don't need to do anything else tonight. Tomorrow is tomorrow. Right now, just rest. 🌙</p>
+    <button class="soft-btn" onclick="window.location.href='toolkit.html'">Back to toolkit</button>
+  </div>
+</div>
+
+<script>
+  function setDot(n) {
+    for (var i = 0; i < 4; i++) {
+      document.getElementById('dot' + i).className = 'dot' + (i <= n ? ' active' : '');
+    }
+  }
+
+  function showSection(id, dot) {
+    document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('show'); });
+    document.getElementById(id).classList.add('show');
+    setDot(dot);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Step 1 -> Step 2
+  function goToClose() {
+    var text = document.getElementById('dumpBox').value.trim();
+    if (!text) {
+      document.getElementById('dumpBox').placeholder = 'Write something first, even just one word...';
+      return;
+    }
+    // Show their words in the worry card
+    var preview = text.length > 200 ? text.substring(0, 200) + '...' : text;
+    document.getElementById('worryCard').textContent = preview;
+    showSection('step2', 1);
+  }
+
+  // File worries animation
+  function fileWorries() {
+    var btn = document.getElementById('fileBtn');
+    btn.disabled = true;
+    var card = document.getElementById('worryCard');
+    var msg = document.getElementById('fileMsg');
+
+    card.classList.add('filed');
+    setTimeout(function() {
+      msg.textContent = 'Filed away. You can think about this tomorrow.';
+      msg.classList.add('show');
+    }, 800);
+    setTimeout(function() {
+      showSection('step3', 2);
+    }, 2500);
+  }
+
+  // 4-7-8 breathing
+  var breathCycles = 0;
+  var breathTarget = 4;
+  var breathing = false;
+
+  function startBreathing() {
+    if (breathing) return;
+    breathing = true;
+    document.getElementById('breatheStartBtn').style.display = 'none';
+    runCycle();
+  }
+
+  function runCycle() {
+    if (breathCycles >= breathTarget) {
+      document.getElementById('breatheLabel').textContent = 'Beautiful. Your body is ready to rest.';
+      document.getElementById('breatheCount').textContent = '';
+      setTimeout(function() { showSection('step4', 3); }, 2000);
+      return;
+    }
+
+    breathCycles++;
+    document.getElementById('breatheCount').textContent = 'Cycle ' + breathCycles + ' of ' + breathTarget;
+
+    var circle = document.getElementById('breatheCircle');
+    var label = document.getElementById('breatheLabel');
+
+    // Breathe in — 4s
+    circle.textContent = 'breathe in';
+    label.textContent = 'Breathe in... 1, 2, 3, 4';
+    circle.classList.remove('contract');
+    circle.classList.add('expand');
+
+    // Hold — 7s
+    setTimeout(function() {
+      circle.textContent = 'hold';
+      label.textContent = 'Hold... 1, 2, 3, 4, 5, 6, 7';
+    }, 4000);
+
+    // Breathe out — 8s
+    setTimeout(function() {
+      circle.textContent = 'breathe out';
+      label.textContent = 'Breathe out slowly... 1 through 8';
+      circle.classList.remove('expand');
+      circle.classList.add('contract');
+    }, 11000);
+
+    // Next cycle
+    setTimeout(function() {
+      runCycle();
+    }, 19000);
+  }
+</script>
+
+</body>
+</html>
