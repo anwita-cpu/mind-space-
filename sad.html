@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Feeling Sad - MindSpace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #0a0a0f;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    nav {
+      background-color: rgba(26,26,46,0.95);
+      padding: 15px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+    nav a { color: white; text-decoration: none; font-size: 16px; opacity: 0.8; }
+    nav a:hover { opacity: 1; }
+
+    .page {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; opacity: 0.45; margin-bottom: 40px; line-height: 1.7; }
+
+    /* Wheel container */
+    #wheelSection { margin-bottom: 32px; }
+
+    canvas {
+      border-radius: 50%;
+      box-shadow: 0 0 60px rgba(127,119,221,0.2);
+      max-width: 300px;
+      width: 100%;
+    }
+
+    #spinBtn {
+      background: #7F77DD;
+      border: none;
+      color: white;
+      padding: 14px 48px;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      border-radius: 99px;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: opacity .2s, transform .15s;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #spinBtn:hover { opacity: 0.88; transform: scale(1.03); }
+    #spinBtn:disabled { opacity: 0.35; cursor: default; transform: none; }
+
+    /* Result card */
+    #resultCard {
+      display: none;
+      background: rgba(26,26,46,0.9);
+      border: 0.5px solid rgba(127,119,221,0.3);
+      border-radius: 20px;
+      padding: 28px 24px;
+      margin-top: 28px;
+      animation: popIn .4s ease;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    #resultEmoji { font-size: 48px; margin-bottom: 12px; }
+    #resultActivity { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+    #resultMsg { font-size: 14px; opacity: 0.55; line-height: 1.7; margin-bottom: 20px; }
+
+    .again-btn {
+      background: rgba(127,119,221,0.15);
+      border: 0.5px solid rgba(127,119,221,0.3);
+      color: white;
+      border-radius: 99px;
+      padding: 10px 28px;
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: background .2s;
+      margin-right: 8px;
+    }
+    .again-btn:hover { background: rgba(127,119,221,0.25); }
+
+    .memory-btn {
+      background: rgba(127,119,221,0.3);
+      border: none;
+      color: white;
+      border-radius: 99px;
+      padding: 10px 28px;
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: background .2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .memory-btn:hover { background: rgba(127,119,221,0.5); }
+
+    .reminder {
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(26,26,46,0.6);
+      border-radius: 14px;
+      font-size: 13px;
+      opacity: 0.45;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="toolkit.html">← Toolkit</a>
+</nav>
+
+<div class="page">
+  <h1>🌧 Feeling Sad</h1>
+  <p class="subtitle">It's okay to feel this way. Spin the wheel for a small activity to lift your mood — no equipment needed, works anywhere.</p>
+
+  <div id="wheelSection">
+    <canvas id="wheelCanvas" width="300" height="300"></canvas>
+    <button id="spinBtn" onclick="spinWheel()">Spin the wheel 🎡</button>
+  </div>
+
+  <div id="resultCard">
+    <div id="resultEmoji"></div>
+    <div id="resultActivity"></div>
+    <div id="resultMsg"></div>
+    <button class="again-btn" onclick="spinAgain()">Spin again</button>
+    <a class="memory-btn" href="memory.html">Open Memory Jar 🫧</a>
+  </div>
+
+  <div class="reminder">
+    💜 Feeling sad doesn't mean something is wrong with you.<br>
+    It means you're human. Be gentle with yourself today.
+  </div>
+</div>
+
+<script>
+  var activities = [
+    { emoji: '🎵', text: 'Play the song that always makes you feel something', msg: 'Music reaches the parts of us words can\'t. Let it in.' },
+    { emoji: '💭', text: 'Think of your happiest memory from this year', msg: 'Close your eyes and really live in it for a moment.' },
+    { emoji: '📱', text: 'Send a voice note to someone you love', msg: 'Connection is healing. Even a short message counts.' },
+    { emoji: '😂', text: 'Look up your favourite meme or video', msg: 'Laughter is medicine. No guilt allowed.' },
+    { emoji: '🌤️', text: 'Look out the window and find something beautiful', msg: 'The world has quiet beauty in it, even on hard days.' },
+    { emoji: '✍️', text: 'Write down one thing you\'re proud of yourself for', msg: 'You\'ve done hard things before. You\'re doing one right now.' },
+    { emoji: '💜', text: 'Open your Memory Jar and read an old memory', msg: 'You\'ve had good days before. They will come again.' },
+    { emoji: '🌟', text: 'Tell yourself something kind out loud', msg: 'You deserve the same kindness you give everyone else.' },
+    { emoji: '📸', text: 'Find something beautiful and photograph it', msg: 'Searching for beauty changes what your brain notices.' },
+    { emoji: '🍫', text: 'Treat yourself to something you enjoy', msg: 'You don\'t need to earn comfort. Take it.' },
+    { emoji: '🌿', text: 'Step outside for 5 minutes', msg: 'Even 5 minutes of fresh air genuinely helps. Try it.' },
+    { emoji: '💌', text: 'Text someone you love', msg: 'You don\'t have to explain everything. Just say hi.' },
+  ];
+
+  var colors = [
+    '#7F77DD', '#9B8FE8', '#A855F7', '#C084FC',
+    '#60C8F5', '#22A8E8', '#86EFAC', '#4ADE80',
+    '#F9A8D4', '#EC4899', '#FDE68A', '#FCD34D'
+  ];
+
+  var canvas = document.getElementById('wheelCanvas');
+  var ctx = canvas.getContext('2d');
+  var numSlices = activities.length;
+  var sliceAngle = (2 * Math.PI) / numSlices;
+  var currentAngle = 0;
+  var spinning = false;
+
+  function drawWheel(rotation) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var cx = canvas.width / 2;
+    var cy = canvas.height / 2;
+    var r = canvas.width / 2 - 4;
+
+    for (var i = 0; i < numSlices; i++) {
+      var start = rotation + i * sliceAngle;
+      var end = start + sliceAngle;
+
+      // slice
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, start, end);
+      ctx.closePath();
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(5,5,13,0.6)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // emoji
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(start + sliceAngle / 2);
+      ctx.textAlign = 'right';
+      ctx.font = '20px serif';
+      ctx.fillText(activities[i].emoji, r - 14, 7);
+      ctx.restore();
+    }
+
+    // centre circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, 22, 0, 2 * Math.PI);
+    ctx.fillStyle = '#0a0a0f';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // pointer at top
+    ctx.beginPath();
+    ctx.moveTo(cx, 2);
+    ctx.lineTo(cx - 10, 22);
+    ctx.lineTo(cx + 10, 22);
+    ctx.closePath();
+    ctx.fillStyle = 'white';
+    ctx.fill();
+  }
+
+  drawWheel(0);
+
+  function spinWheel() {
+    if (spinning) return;
+    spinning = true;
+    document.getElementById('spinBtn').disabled = true;
+    document.getElementById('resultCard').style.display = 'none';
+
+    var extraSpins = (Math.random() * 5 + 5) * 2 * Math.PI;
+    var targetAngle = currentAngle + extraSpins;
+    var duration = 4000;
+    var start = null;
+
+    function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+    function animate(timestamp) {
+      if (!start) start = timestamp;
+      var progress = Math.min((timestamp - start) / duration, 1);
+      var angle = currentAngle + (targetAngle - currentAngle) * easeOut(progress);
+      drawWheel(angle);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        currentAngle = targetAngle % (2 * Math.PI);
+        spinning = false;
+        document.getElementById('spinBtn').disabled = false;
+        showResult(currentAngle);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  function showResult(angle) {
+    // figure out which slice the pointer (top = -PI/2) is pointing at
+    var normalized = ((-angle - Math.PI / 2) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+    var index = Math.floor(normalized / sliceAngle) % numSlices;
+    var activity = activities[index];
+
+    document.getElementById('resultEmoji').textContent = activity.emoji;
+    document.getElementById('resultActivity').textContent = activity.text;
+    document.getElementById('resultMsg').textContent = activity.msg;
+    document.getElementById('resultCard').style.display = 'block';
+
+    document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function spinAgain() {
+    document.getElementById('resultCard').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(spinWheel, 300);
+  }
+</script>
+
+</body>
+</html>
