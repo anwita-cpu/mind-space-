@@ -3,9 +3,145 @@
        <head>
             <title> Anxiety- Mindspace</title>
           <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+         <style>
+          body{
+          background-color:black;
+          color:white;
+          font-family: 'Poppins', sans-serif;
+          }
+
+        nav{
+           background-color: #1a1a2e;
+           }
+          
+        .card{
+         background-color:#1a1a2ee0;
+         }
+         
+        .purple-btn{
+         background-color: #7F77DD;
+          }
+
+          .muted-text{
+          color: rgba(255,255,255,0.5);
+          }
+           
+         </style>
+       </head>
         
+        <body>
+
+          <div id= "step1">
+          <h2>Anxiety is awful.</h2>
+          <p>We're not going to tell you to just breathe. Let's actually get through this together.</p>
+          <button onclick= "goTostep2()">I'm ready</button>
+         </div>
+
+        <div id ="step2" style="display:none">
+         <h2> What are you scared of most right now?</h2>
+          <p>Just name it. You don't have to fix it, just write it down.</p>
+          <textarea id="fearBox" placeholder="I'm scared that..."></textarea>
+           <button onclick="goToStep3()">I've written it down</button>
+          </div>
+
+         <div id="step3" style= "display:none">
+          <h2> 60 second. Just tap the dot </h2>
+          <div id= "gameArea" style="position:relative; width:300px; height:300px; background:#1a1a2e; border-radius:15px; margin: 20px auto;">
+          <div id= "dot" style="position:absolute; width:40px; height:40px; background:#7F77DD; border-radius:50%; cursor:pointer;"></div>
+          </div>
+          <p id="score">Score: 0</p>
+          <p id ="timer"> 60</p>
+           <button id="startGame" onclick="startGame()">Start</button>
+            </div>
+
+      <div id="step4" style="display:none">
+       <h2>You have survived 100% of your worst days.</h2>
+          <p>Think of one hard thing you have already gotten through.</p>
+           <textarea id="survivalBox" placeholder="I got through..."></textarea>
+           <button onclick="goToStep5()">I remember</button>
+          </div>
+
+         <div id="step5" style="display:none">
+       <h2>In one year, will this matter as much as it feels right now?</h2>
+        <p>You don't have to answer perfectly. Just sit with that question for a moment.</p>
+         <button onclick="window.location.href='toolkit.html'">Back to toolkit</button>
+         </div>
+
+         <script>
+         function goTostep2() {
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+  }
+
+  function goToStep3() {
+    var text = document.getElementById('fearBox').value.trim();
+    if (!text) return;
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'block';
+  }
+
+  function goToStep4() {
+    document.getElementById('step3').style.display = 'none';
+    document.getElementById('step4').style.display = 'block';
+  }
+
+  function goToStep5() {
+    var text = document.getElementById('survivalBox').value.trim();
+    if (!text) return;
+    document.getElementById('step4').style.display = 'none';
+    document.getElementById('step5').style.display = 'block';
+  }
+         var score = 0;
+  var timeLeft = 60;
+  var gameTimer = null;
+  var gameStarted = false;
+
+  function startGame() {
+    if (gameStarted) return;
+    gameStarted = true;
+    document.getElementById('startGame').style.display = 'none';
+    moveDot();
+
+    gameTimer = setInterval(function() {
+      timeLeft--;
+      document.getElementById('timer').textContent = timeLeft;
+      if (timeLeft <= 0) {
+        clearInterval(gameTimer);
+        document.getElementById('dot').style.display = 'none';
+        document.getElementById('score').textContent = 'You tapped ' + score + ' times!';
+        setTimeout(goToStep4, 2000);
+      }
+    }, 1000);
+  }
+
+         function moveDot() {
+    var area = document.getElementById('gameArea');
+    var dot = document.getElementById('dot');
+    var maxX = area.offsetWidth - 40;
+    var maxY = area.offsetHeight - 40;
+    var x = Math.random() * maxX;
+    var y = Math.random() * maxY;
+    dot.style.left = x + 'px';
+    dot.style.top = y + 'px';
+  }
+
+  document.getElementById('dot').addEventListener('click', function() {
+    if (!gameStarted) return;
+    score++;
+    document.getElementById('score').textContent = 'Score: ' + score;
+    moveDot();
+  });
+           </script>
+          
+        </body>
+          
+        
+     </html>
+     
 
          
-       </head>
+      
    
- </html>
+
+
+         
