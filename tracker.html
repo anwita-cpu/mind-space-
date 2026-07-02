@@ -306,7 +306,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, query, where, orderBy, limit, getDocs, serverTimestamp }
 
   const firebaseConfig = {
     apiKey: "AIzaSyCdM39QjJ0m3f9wob5qqacgHpnihMIfsW0",
@@ -384,7 +384,8 @@
   };
 
   async function loadHistory() {
-    var q = query(collection(db, 'moods'), orderBy('createdAt', 'desc'), limit(7));
+    var userId = localStorage.getItem('ms_user_id') || 'anonymous';
+    var q = query(collection(db, 'moods'), where('userId', '==', userId), orderBy('createdAt', 'desc'), limit(7));
     var snap = await getDocs(q);
     var feed = document.getElementById('historyFeed');
     if (snap.empty) {
