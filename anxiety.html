@@ -1,71 +1,98 @@
 <!DOCTYPE html>
- <html>
+<html>
        <head>
             <title> Anxiety- Mindspace</title>
           <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
          <style>
-          body{
-          background-color:black;
-          color:white;
-          font-family: 'Poppins', sans-serif;
-           padding: 50px;
-          text-align:center;
-          }
-
-          h2{
-           font-size:28px;
-           margin-bottom: 16px;
-            }
-
-           p{
-            font-size:16px;
-             opacity: 0.7;
-             margin-bottom: 20px;
-             }
-
-          textarea{
-             width: 100%;
-             max-width: 500px;
-             height: 150px;
-              background: #1a1a2e;
-              border: 1px solid #7F77DD;
-              border-radius: 12px;
-              color: white;
-              font-family: 'Poppins', sans-serif;
-              font-size: 14px;
-              padding: 14px;
-              display: block;
-              margin: 0 auto 20px;
-              resize: none;
-           }
-
-          button{
-           background-color: #7F77DD;
-           color:white;
-           border:none;
-           padding:14px 40px;
-           font-size:16px;
-            font-family: 'Poppins', sans-serif;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-top: 10px;
-              }
-
-        nav{
-           background-color: #1a1a2e;
-           }
-          
-        .card{
-         background-color:#1a1a2ee0;
-         }
          
-        .purple-btn{
-         background-color: #7F77DD;
-          }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-          .muted-text{
-          color: rgba(255,255,255,0.5);
-          }
+   body {
+   background-color: #0a0a0f;
+   color: white;
+   font-family: 'Poppins', sans-serif;
+   text-align: center;
+   min-height: 100vh;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 40px 20px;
+  }
+
+ .page { width: 100%; max-width: 520px; }
+
+ h2 { font-size: 26px; font-weight: 600; margin-bottom: 16px; line-height: 1.4; }
+
+ p { font-size: 15px; opacity: 0.6; margin-bottom: 22px; line-height: 1.6; }
+
+ textarea {
+   width: 100%;
+   max-width: 500px;
+   height: 150px;
+   background: rgba(26,26,46,0.88);
+   border: 0.5px solid rgba(127,119,221,0.4);
+   border-radius: 14px;
+   color: white;
+   font-family: 'Poppins', sans-serif;
+   font-size: 14px;
+   padding: 16px;
+   line-height: 1.7;
+   display: block;
+   margin: 0 auto 20px;
+   resize: none;
+   outline: none;
+   transition: border-color .2s;
+  }
+  textarea:focus { border-color: rgba(127,119,221,0.7); }
+  textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+ button {
+   background-color: #7F77DD;
+   color: white;
+   border: none;
+   padding: 14px 40px;
+   font-size: 16px;
+   font-family: 'Poppins', sans-serif;
+   border-radius: 99px;
+   cursor: pointer;
+   margin-top: 10px;
+   transition: opacity .2s, transform .15s;
+ }
+button:hover { opacity: 0.88; transform: scale(1.03); }
+
+ #gameArea {
+   position: relative;
+   width: min(440px, 90vw);
+   height: min(440px, 90vw);
+   margin: 24px auto;
+   background: radial-gradient(circle at 50% 45%, #22223f, #131327);
+   border: 1px solid rgba(127,119,221,0.25);
+   border-radius: 24px;
+   box-shadow: inset 0 0 70px rgba(127,119,221,0.10), 0 14px 50px rgba(0,0,0,0.45);
+   overflow: hidden;
+  }
+ #dot {
+   position: absolute;
+   left: 0; top: 0;
+   width: 66px;
+   height: 66px;
+   border-radius: 50%;
+   background: radial-gradient(circle at 35% 32%, #b7aef5, #7F77DD 58%, #6159c0);
+   box-shadow: 0 0 22px rgba(127,119,221,0.65), 0 4px 12px rgba(0,0,0,0.35);
+   cursor: pointer;
+   transition: left .13s ease-out, top .13s ease-out, transform .1s;
+   animation: dotPulse 1.6s ease-in-out infinite;
+    }
+   #dot:hover { transform: scale(1.08); }
+   #dot:active { transform: scale(0.88); }
+   @keyframes dotPulse {
+     0%, 100% { box-shadow: 0 0 18px rgba(127,119,221,0.5), 0 4px 12px rgba(0,0,0,0.35); }
+      50%      { box-shadow: 0 0 34px rgba(127,119,221,0.85), 0 4px 12px rgba(0,0,0,0.35); }
+    }
+     #score { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+     #timer { font-size: 14px; opacity: 0.5; margin-bottom: 18px; }
+
+      .muted-text { color: rgba(255,255,255,0.5); }
            
          </style>
        </head>
