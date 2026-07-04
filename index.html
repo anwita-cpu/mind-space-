@@ -63,18 +63,62 @@
       h1 { font-size: 64px; font-weight: 600; margin-bottom: 10px; }
       .tagline { font-size: 16px; opacity: 0.55; margin-bottom: 4px; }
 
-      nav {
-        background-color: rgba(26,26,46,0.85);
-        backdrop-filter: blur(6px);
-        padding: 15px;
+      /* ===== Sidebar nav ===== */
+      .side-nav {
+        position: fixed;
+        top: 0; left: 0;
+        height: 100vh;
+        width: 84px;
+        background: rgba(26,26,46,0.92);
+        backdrop-filter: blur(10px);
+        border-right: 0.5px solid rgba(255,255,255,0.07);
         display: flex;
-        gap: 20px;
-        justify-content: center;
-        position: relative;
-        z-index: 2;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 16px 0;
+        z-index: 100;
       }
-      nav a { color: white; text-decoration: none; font-size: 16px; opacity: 0.8; }
-      nav a:hover { opacity: 1; }
+      .side-nav .brand { font-size: 12px; font-weight: 600; color: #b7b0ef; letter-spacing: .01em; margin-bottom: 14px; line-height: 1.2; text-align: center; }
+      .side-nav a {
+        width: 66px;
+        padding: 9px 0;
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        text-decoration: none;
+        color: #fff;
+        opacity: 0.55;
+        transition: opacity .2s, background .2s;
+      }
+      .side-nav a .ico { font-size: 20px; line-height: 1; }
+      .side-nav a .lbl { font-size: 10px; letter-spacing: .02em; }
+      .side-nav a:hover { opacity: 1; background: rgba(255,255,255,0.05); }
+      .side-nav a.active { opacity: 1; background: rgba(127,119,221,0.22); }
+      .side-nav a.active .lbl { color: #cec9f5; }
+
+      /* pushes page content clear of the bar */
+      @media (min-width: 721px) {
+        body { padding-left: 84px; }
+        #gardenLayer { left: -84px; width: calc(100% + 84px); }
+      }
+      @media (max-width: 720px) {
+        body { padding-bottom: 80px; }
+        .side-nav {
+          top: auto; bottom: 0; left: 0;
+          width: 100%; height: auto;
+          flex-direction: row;
+          justify-content: space-around;
+          gap: 0;
+          padding: 6px 2px;
+          border-right: none;
+          border-top: 0.5px solid rgba(255,255,255,0.07);
+        }
+        .side-nav .brand { display: none; }
+        .side-nav a { width: auto; flex: 1; padding: 6px 0; }
+      }
 
       .get-started {
         background-color: #7F77DD;
@@ -139,12 +183,13 @@
         cursor: pointer;
         transition: transform 0.3s ease, background 0.3s ease;
         border: 0.5px solid rgba(255,255,255,0.07);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
         text-decoration: none;
         display: block;
       }
       .card h3 { font-size: 16px; margin-bottom: 8px; }
       .card p { font-size: 13px; line-height: 1.6; opacity: 0.7; }
-      .card:hover { background: rgba(42,42,74,0.95); transform: translateY(-5px); }
+      .card:hover { background: rgba(42,42,74,0.95); transform: translateY(-5px); border-color: rgba(127,119,221,0.35); }
 
       .helplines-box {
         margin: 40px auto 0;
@@ -302,22 +347,23 @@
   </head>
   <body>
 
+    <nav class="side-nav">
+      <div class="brand">Mindspace</div>
+      <a href="index.html" class="active"><span class="ico">🏠</span><span class="lbl">Home</span></a>
+      <a href="sage.html"><span class="ico">💬</span><span class="lbl">Sage</span></a>
+      <a href="tracker.html"><span class="ico">📊</span><span class="lbl">Mood</span></a>
+      <a href="toolkit.html"><span class="ico">🧘</span><span class="lbl">Coping</span></a>
+      <a href="vent.html"><span class="ico">💨</span><span class="lbl">Vent</span></a>
+      <a href="community.html"><span class="ico">🫂</span><span class="lbl">Circle</span></a>
+      <a href="memory.html"><span class="ico">🫙</span><span class="lbl">Memory</span></a>
+    </nav>
+
     <div id="gardenLayer">
       <svg id="gardenSvg" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
 
     <div id="placeOverlay" onclick="handlePlacement(event)"></div>
     <div id="placeBanner">🌸 Tap anywhere to plant your flower</div>
-
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="sage.html">Sage</a>
-      <a href="tracker.html">Mood</a>
-      <a href="toolkit.html">Coping</a>
-      <a href="vent.html">Vent</a>
-      <a href="community.html">Circle</a>
-      <a href="memory.html">Memory</a>
-    </nav>
 
     <div class="page-content">
       <h1>Mindspace</h1>
