@@ -1,118 +1,342 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="dark">
 <head>
-<title> Sage- Mindspace </title>
+<title>Sage — Mindspace</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-body{
-background-color: black;
-color : white;
-font-family : 'Poppins', sans-serif;
-padding : 0px;
-margin: 0px;
-}
-nav{
-background-color: #1a1a2e;
-padding: 15px;
-display: flex;
-gap: 20px;
-justify-content: center;
-}
-nav a{
-color: white;
-text-decoration: none;
-font-size: 16px;
-}
-h1{
-text-align :center;
-font-size: 36px;
-}
-p{
-text-align: center;
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  html[data-theme="dark"] {
+    --bg: #0a0a0f;
+    --text: #ffffff;
+    --nav-bg: rgba(26,26,46,0.95);
+    --nav-border: rgba(255,255,255,0.07);
+    --chatbox-bg: #1a1a2e;
+    --chatbox-border: rgba(255,255,255,0.07);
+    --input-bg: #1a1a2e;
+    --input-color: #ffffff;
+    --input-border: rgba(255,255,255,0.07);
+    --user-bubble: #444;
+    --sage-bubble: #7F77DD;
+    --subtext: rgba(255,255,255,0.5);
+    --toggle-bg: rgba(255,255,255,0.08);
+    --toggle-border: rgba(255,255,255,0.15);
+  }
+ 
+  html[data-theme="light"] {
+    --bg: #f5f5f7;
+    --text: #1a1a2e;
+    --nav-bg: rgba(255,255,255,0.97);
+    --nav-border: rgba(0,0,0,0.75);
+    --chatbox-bg: #ffffff;
+    --chatbox-border: rgba(0,0,0,0.75);
+    --input-bg: #ffffff;
+    --input-color: #1a1a2e;
+    --input-border: rgba(0,0,0,0.75);
+    --user-bubble: #e0e0e0;
+    --sage-bubble: #7F77DD;
+    --subtext: rgba(26,26,46,0.5);
+    --toggle-bg: rgba(255,255,255,0.97);
+    --toggle-border: rgba(0,0,0,0.75);
+  }
+ 
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 60px;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+ 
+  /* ===== Sidebar nav ===== */
+  .side-nav {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    width: 84px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    border-right: 1.5px solid var(--nav-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 16px 0;
+    z-index: 100;
+    transition: background 0.4s;
+  }
+  .side-nav .brand { font-size: 12px; font-weight: 600; color: #b7b0ef; letter-spacing: .01em; margin-bottom: 14px; line-height: 1.2; text-align: center; }
+  .side-nav a {
+    width: 66px;
+    padding: 9px 0;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--text);
+    opacity: 0.55;
+    transition: opacity .2s, background .2s;
+  }
+  .side-nav a .ico { font-size: 20px; line-height: 1; }
+  .side-nav a .lbl { font-size: 10px; letter-spacing: .02em; }
+  .side-nav a:hover { opacity: 1; background: rgba(127,119,221,0.08); }
+  .side-nav a.active { opacity: 1; background: rgba(127,119,221,0.22); }
+  .side-nav a.active .lbl { color: #cec9f5; }
+ 
+  @media (min-width: 721px) {
+    body { padding-left: 84px; }
+  }
+  @media (max-width: 720px) {
+    body { padding-bottom: 80px; }
+    .side-nav {
+      top: auto; bottom: 0; left: 0;
+      width: 100%; height: auto;
+      flex-direction: row;
+      justify-content: space-around;
+      gap: 0;
+      padding: 6px 2px;
+      border-right: none;
+      border-top: 1.5px solid var(--nav-border);
+    }
+    .side-nav .brand { display: none; }
+    .side-nav a { width: auto; flex: 1; padding: 6px 0; }
+    .theme-toggle { top: 12px; right: 12px; }
+  }
+ 
+  .theme-toggle {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    z-index: 200;
+    background: var(--toggle-bg);
+    border: 1.5px solid var(--toggle-border);
+    border-radius: 99px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .theme-toggle:hover { opacity: 0.8; }
+ 
+  .page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+ 
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .header h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+  .header p { font-size: 14px; color: var(--subtext); }
+ 
+  #chatbox {
+    width: 100%;
+    height: 420px;
+    background: var(--chatbox-bg);
+    border: 1.5px solid var(--chatbox-border);
+    border-radius: 16px;
+    padding: 20px;
+    overflow-y: scroll;
+    margin-bottom: 14px;
+    transition: background 0.4s, border-color 0.4s;
+  }
+ 
+  .bubble-sage {
+    background: #7F77DD;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 15px;
+    display: inline-block;
+    max-width: 80%;
+    clear: both;
+    float: left;
+    margin: 5px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+ 
+  .bubble-user {
+    background: var(--user-bubble);
+    color: var(--text);
+    padding: 10px 15px;
+    border-radius: 15px;
+    display: inline-block;
+    max-width: 80%;
+    clear: both;
+    float: right;
+    margin: 5px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+ 
+  .input-row {
+    display: flex;
+    gap: 10px;
+  }
+ 
+  #userInput {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1.5px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--input-color);
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: background 0.4s, border-color 0.4s, color 0.4s;
+  }
+  #userInput::placeholder { color: var(--subtext); }
+ 
+  #sendBtn {
+    padding: 12px 22px;
+    background: #7F77DD;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    transition: opacity 0.2s;
+  }
+  #sendBtn:hover { opacity: 0.88; }
+  #sendBtn:disabled { opacity: 0.4; cursor: default; }
 </style>
 </head>
 <body>
-<nav>
-  <a href="index.html">Mindspace</a>
+ 
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+ 
+<nav class="side-nav">
+  <div class="brand">Mindspace</div>
+  <a href="index.html"><span class="ico">🏠</span><span class="lbl">Home</span></a>
+  <a href="sage.html" class="active"><span class="ico">💬</span><span class="lbl">Sage</span></a>
+  <a href="tracker.html"><span class="ico">📊</span><span class="lbl">Mood</span></a>
+  <a href="toolkit.html"><span class="ico">🧘</span><span class="lbl">Coping</span></a>
+  <a href="vent.html"><span class="ico">💨</span><span class="lbl">Vent</span></a>
+  <a href="community.html"><span class="ico">🫂</span><span class="lbl">Circle</span></a>
+  <a href="memory.html"><span class="ico">🫙</span><span class="lbl">Memory</span></a>
 </nav>
-
-<h1>💬 Sage</h1>
-<p>Need a safe space to talk? Sage is here to listen</p>
-
-<div id="chatbox" style="width:500px; height:400px; margin:20px auto; background-color:#1a1a2e; border-radius:15px; padding:20px; overflow-y:scroll; text-align:left;">
-  <p style="background-color:#7F77DD; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%;">
-    Hey, I'm Sage 💜 What's on your mind?
-  </p>
+ 
+<div class="page">
+  <div class="header">
+    <h1>💬 Sage</h1>
+    <p>Need a safe space to talk? Sage is here to listen.</p>
+  </div>
+ 
+  <div id="chatbox">
+    <p class="bubble-sage">Hey, I'm Sage 💜 What's on your mind?</p>
+    <div style="clear:both"></div>
+  </div>
+ 
+  <div class="input-row">
+    <input id="userInput" type="text" placeholder="Type here..." onkeydown="if(event.key==='Enter') sendMessage()"/>
+    <button id="sendBtn" onclick="sendMessage()">Send</button>
+  </div>
 </div>
-
-<div style="width:500px; margin:0 auto; display:flex; gap:10px;">
-  <input id="userInput" type="text" placeholder="Type here..." style="flex:1; padding:10px; border-radius:10px; border:none; font-family:'Poppins',sans-serif; font-size:14px;" onkeydown="if(event.key==='Enter') sendMessage()"/>
-  <button onclick="sendMessage()" style="padding:10px 20px; background-color:#7F77DD; color:white; border:none; border-radius:10px; cursor:pointer; font-family:'Poppins',sans-serif;">Send</button>
-</div>
-
+ 
 <script>
-var conversationHistory = [];
-
-function addMessage(text, isUser) {
-  var chatbox = document.getElementById('chatbox');
-  var msg = document.createElement('p');
-  msg.textContent = text;
-  if (isUser) {
-    msg.style.cssText = 'background-color:#444; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%; clear:both; float:right; margin:5px 0;';
-  } else {
-    msg.style.cssText = 'background-color:#7F77DD; padding:10px 15px; border-radius:15px; display:inline-block; max-width:80%; clear:both; float:left; margin:5px 0;';
+  // ===== THEME =====
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ms_theme', theme);
+    var btn = document.getElementById('themeBtn');
+    btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
   }
-  chatbox.appendChild(msg);
-  chatbox.scrollTop = chatbox.scrollHeight;
-}
-
-function sendMessage() {
-  var input = document.getElementById('userInput');
-  var userText = input.value.trim();
-  if (!userText) return;
-
-  addMessage(userText, true);
-  input.value = '';
-
-  conversationHistory.push({ role: 'user', content: userText });
-
-  fetch('https://sage-proxy.anwitaghosh20.workers.dev', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
-      messages: [
-        { role: 'system', content: 'You are Sage, a warm and supportive mental health companion for teenagers. You listen carefully, are never judgemental, and respond with empathy and care. Keep responses concise and supportive.' },
-        ...conversationHistory
-      ],
-      max_tokens: 500
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  }
+  var savedTheme = localStorage.getItem('ms_theme') || 'dark';
+  applyTheme(savedTheme);
+ 
+  // ===== SAGE CHAT =====
+  var conversationHistory = [];
+ 
+  function addMessage(text, isUser) {
+    var chatbox = document.getElementById('chatbox');
+    var clearDiv = chatbox.querySelector('div');
+    if (clearDiv) chatbox.removeChild(clearDiv);
+ 
+    var msg = document.createElement('p');
+    msg.textContent = text;
+    msg.className = isUser ? 'bubble-user' : 'bubble-sage';
+    chatbox.appendChild(msg);
+ 
+    var clear = document.createElement('div');
+    clear.style.clear = 'both';
+    chatbox.appendChild(clear);
+ 
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+ 
+  function sendMessage() {
+    var input = document.getElementById('userInput');
+    var userText = input.value.trim();
+    if (!userText) return;
+    addMessage(userText, true);
+    input.value = '';
+ 
+    var btn = document.getElementById('sendBtn');
+    btn.disabled = true;
+    btn.textContent = '...';
+ 
+    conversationHistory.push({ role: 'user', content: userText });
+ 
+    fetch('https://sage-proxy.anwitaghosh20.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: 'You are Sage, a warm and supportive mental health companion for teenagers. You listen carefully, are never judgemental, and respond with empathy and care. Keep responses concise and supportive.' },
+          ...conversationHistory
+        ],
+        max_tokens: 500
+      })
     })
-  })
-  .then(function(response) {
-    return response.text();
-  })
-  .then(function(text) {
-    try {
-      var data = JSON.parse(text);
-      if (data.choices && data.choices[0] && data.choices[0].message) {
-        var reply = data.choices[0].message.content;
-        conversationHistory.push({ role: 'assistant', content: reply });
-        addMessage(reply, false);
-      } else if (data.error) {
-        addMessage('⚠️ Error: ' + JSON.stringify(data.error), false);
-      } else {
-        addMessage('⚠️ Unexpected response: ' + text.substring(0, 100), false);
+    .then(function(response) { return response.text(); })
+    .then(function(text) {
+      btn.disabled = false;
+      btn.textContent = 'Send';
+      try {
+        var data = JSON.parse(text);
+        if (data.choices && data.choices[0] && data.choices[0].message) {
+          var reply = data.choices[0].message.content;
+          conversationHistory.push({ role: 'assistant', content: reply });
+          addMessage(reply, false);
+        } else if (data.error) {
+          addMessage('⚠️ Error: ' + JSON.stringify(data.error), false);
+        } else {
+          addMessage('⚠️ Unexpected response. Try again.', false);
+        }
+      } catch(e) {
+        addMessage('⚠️ Something went wrong. Try again.', false);
       }
-    } catch(e) {
-      addMessage('⚠️ Parse error: ' + text.substring(0, 100), false);
-    }
-  })
-  .catch(function(err) {
-    addMessage('⚠️ Network error: ' + err.message, false);
-  });
-}
+    })
+    .catch(function(err) {
+      btn.disabled = false;
+      btn.textContent = 'Send';
+      addMessage('⚠️ Network error: ' + err.message, false);
+    });
+  }
 </script>
-
 </body>
 </html>
+ 
+
+
+
+
+
+
