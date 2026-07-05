@@ -1,21 +1,90 @@
-<!DOCTYPE html>
-<html>
+!DOCTYPE html>
+<html data-theme="dark">
   <head>
     <title>Mindspace</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
       * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
+      /* ===== THEME VARIABLES ===== */
+      html[data-theme="dark"] {
+        --bg: #0a0a0f;
+        --text: #ffffff;
+        --nav-bg: rgba(26,26,46,0.92);
+        --nav-border: rgba(255,255,255,0.07);
+        --card-bg: rgba(26,26,46,0.88);
+        --card-border: rgba(255,255,255,0.07);
+        --card-hover-bg: rgba(42,42,74,0.95);
+        --card-hover-border: rgba(127,119,221,0.35);
+        --mood-btn-bg: rgba(255,255,255,0.06);
+        --mood-btn-border: rgba(255,255,255,0.1);
+        --mood-btn-hover: rgba(255,255,255,0.12);
+        --mood-msg-color: rgba(255,255,255,0.55);
+        --helpline-bg: rgba(26,26,46,0.88);
+        --helpline-card-bg: rgba(255,255,255,0.04);
+        --helpline-card-border: rgba(255,255,255,0.07);
+        --disclaimer-bg: rgba(26,26,46,0.6);
+        --disclaimer-color: #555;
+        --feedback-btn-bg: rgba(26,26,46,0.95);
+        --feedback-btn-border: rgba(255,255,255,0.12);
+        --feedback-btn-color: rgba(255,255,255,0.7);
+        --feedback-popup-bg: #1a1a2e;
+        --input-bg: rgba(255,255,255,0.06);
+        --input-border: rgba(255,255,255,0.1);
+        --tagline-opacity: 0.55;
+        --label-opacity: 0.4;
+        --sub-opacity: 0.5;
+        --desc-opacity: 0.7;
+        --note-opacity: 0.25;
+        --brand-color: #b7b0ef;
+        --toggle-bg: rgba(255,255,255,0.08);
+        --toggle-border: rgba(255,255,255,0.15);
+      }
+ 
+      html[data-theme="light"] {
+        --bg: #f5f5f7;
+        --text: #1a1a2e;
+        --nav-bg: rgba(255,255,255,0.97);
+        --nav-border: rgba(0,0,0,0.75);
+        --card-bg: rgba(255,255,255,0.95);
+        --card-border: rgba(0,0,0,0.75);
+        --card-hover-bg: rgba(240,238,255,0.98);
+        --card-hover-border: #7F77DD;
+        --mood-btn-bg: rgba(255,255,255,0.9);
+        --mood-btn-border: rgba(0,0,0,0.75);
+        --mood-btn-hover: rgba(240,238,255,0.9);
+        --mood-msg-color: rgba(26,26,46,0.6);
+        --helpline-bg: rgba(255,255,255,0.97);
+        --helpline-card-bg: rgba(245,245,247,0.9);
+        --helpline-card-border: rgba(0,0,0,0.75);
+        --disclaimer-bg: rgba(0,0,0,0.05);
+        --disclaimer-color: #666;
+        --feedback-btn-bg: rgba(255,255,255,0.97);
+        --feedback-btn-border: rgba(0,0,0,0.75);
+        --feedback-btn-color: rgba(26,26,46,0.8);
+        --feedback-popup-bg: #ffffff;
+        --input-bg: rgba(245,245,247,0.9);
+        --input-border: rgba(0,0,0,0.75);
+        --tagline-opacity: 0.5;
+        --label-opacity: 0.45;
+        --sub-opacity: 0.5;
+        --desc-opacity: 0.65;
+        --note-opacity: 0.4;
+        --brand-color: #7F77DD;
+        --toggle-bg: rgba(255,255,255,0.97);
+        --toggle-border: rgba(0,0,0,0.75);
+      }
+ 
       body {
-        background-color: #0a0a0f;
-        color: white;
+        background-color: var(--bg);
+        color: var(--text);
         font-family: 'Poppins', sans-serif;
         min-height: 100vh;
         position: relative;
         overflow-x: hidden;
-        transition: background-color 1.4s ease;
+        transition: background-color 0.4s ease, color 0.4s ease;
       }
-
+ 
       #gardenLayer {
         position: absolute;
         top: 0; left: 0;
@@ -23,9 +92,9 @@
         pointer-events: none;
         z-index: 0;
       }
-
+ 
       #gardenSvg { width: 100%; height: 100%; }
-
+ 
       #placeOverlay {
         display: none;
         position: fixed;
@@ -35,7 +104,7 @@
         cursor: crosshair;
       }
       #placeOverlay.active { display: block; }
-
+ 
       #placeBanner {
         display: none;
         position: fixed;
@@ -52,34 +121,56 @@
         white-space: nowrap;
       }
       #placeBanner.active { display: block; }
-
+ 
       .page-content {
         position: relative;
         z-index: 1;
         text-align: center;
         padding: 80px 20px 60px;
       }
-
+ 
       h1 { font-size: 64px; font-weight: 600; margin-bottom: 10px; }
-      .tagline { font-size: 16px; opacity: 0.55; margin-bottom: 4px; }
-
+      .tagline { font-size: 16px; opacity: var(--tagline-opacity); margin-bottom: 4px; }
+ 
+      /* ===== Theme Toggle ===== */
+      .theme-toggle {
+        position: fixed;
+        top: 16px;
+        right: 20px;
+        z-index: 200;
+        background: var(--toggle-bg);
+        border: 1.5px solid var(--toggle-border);
+        border-radius: 99px;
+        padding: 6px 14px;
+        font-size: 13px;
+        font-family: 'Poppins', sans-serif;
+        cursor: pointer;
+        color: var(--text);
+        transition: background 0.3s, color 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .theme-toggle:hover { opacity: 0.8; }
+ 
       /* ===== Sidebar nav ===== */
       .side-nav {
         position: fixed;
         top: 0; left: 0;
         height: 100vh;
         width: 84px;
-        background: rgba(26,26,46,0.92);
+        background: var(--nav-bg);
         backdrop-filter: blur(10px);
-        border-right: 0.5px solid rgba(255,255,255,0.07);
+        border-right: 1.5px solid var(--nav-border);
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 4px;
         padding: 16px 0;
         z-index: 100;
+        transition: background 0.4s;
       }
-      .side-nav .brand { font-size: 12px; font-weight: 600; color: #b7b0ef; letter-spacing: .01em; margin-bottom: 14px; line-height: 1.2; text-align: center; }
+      .side-nav .brand { font-size: 12px; font-weight: 600; color: var(--brand-color); letter-spacing: .01em; margin-bottom: 14px; line-height: 1.2; text-align: center; }
       .side-nav a {
         width: 66px;
         padding: 9px 0;
@@ -89,17 +180,16 @@
         align-items: center;
         gap: 4px;
         text-decoration: none;
-        color: #fff;
+        color: var(--text);
         opacity: 0.55;
         transition: opacity .2s, background .2s;
       }
       .side-nav a .ico { font-size: 20px; line-height: 1; }
       .side-nav a .lbl { font-size: 10px; letter-spacing: .02em; }
-      .side-nav a:hover { opacity: 1; background: rgba(255,255,255,0.05); }
+      .side-nav a:hover { opacity: 1; background: rgba(127,119,221,0.08); }
       .side-nav a.active { opacity: 1; background: rgba(127,119,221,0.22); }
       .side-nav a.active .lbl { color: #cec9f5; }
-
-      /* pushes page content clear of the bar */
+ 
       @media (min-width: 721px) {
         body { padding-left: 84px; }
         #gardenLayer { left: -84px; width: calc(100% + 84px); }
@@ -114,12 +204,13 @@
           gap: 0;
           padding: 6px 2px;
           border-right: none;
-          border-top: 0.5px solid rgba(255,255,255,0.07);
+          border-top: 0.5px solid var(--nav-border);
         }
         .side-nav .brand { display: none; }
         .side-nav a { width: auto; flex: 1; padding: 6px 0; }
+        .theme-toggle { top: 12px; right: 12px; }
       }
-
+ 
       .get-started {
         background-color: #7F77DD;
         border: none;
@@ -133,15 +224,15 @@
         transition: opacity .2s, transform .15s;
       }
       .get-started:hover { opacity: 0.88; transform: scale(1.03); }
-
+ 
       .mood-section { margin-top: 36px; position: relative; z-index: 1; }
-      .mood-label { font-size: 13px; opacity: 0.4; margin-bottom: 12px; letter-spacing: .03em; }
+      .mood-label { font-size: 13px; opacity: var(--label-opacity); margin-bottom: 12px; letter-spacing: .03em; }
       .mood-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-
+ 
       .mood-btn {
-        background: rgba(255,255,255,0.06);
-        border: 0.5px solid rgba(255,255,255,0.1);
-        color: white;
+        background: var(--mood-btn-bg);
+        border: 1.5px solid var(--mood-btn-border);
+        color: var(--text);
         border-radius: 99px;
         padding: 9px 20px;
         font-size: 13px;
@@ -149,19 +240,19 @@
         cursor: pointer;
         transition: background .2s, transform .15s;
       }
-      .mood-btn:hover { background: rgba(255,255,255,0.12); transform: scale(1.04); }
+      .mood-btn:hover { background: var(--mood-btn-hover); transform: scale(1.04); }
       .mood-btn.picked { background: rgba(127,119,221,0.3); border-color: rgba(127,119,221,0.7); }
-
+ 
       .mood-msg {
         font-size: 13px;
-        color: rgba(255,255,255,0.55);
+        color: var(--mood-msg-color);
         margin-top: 14px;
         min-height: 20px;
         opacity: 0;
         transition: opacity .5s;
       }
       .mood-msg.show { opacity: 1; }
-
+ 
       .cards-container {
         display: flex;
         flex-wrap: wrap;
@@ -172,43 +263,44 @@
         position: relative;
         z-index: 1;
       }
-
+ 
       .card {
-        background: rgba(26,26,46,0.88);
+        background: var(--card-bg);
         backdrop-filter: blur(6px);
-        color: white;
+        color: var(--text);
         padding: 20px;
         border-radius: 15px;
         width: 180px;
         cursor: pointer;
-        transition: transform 0.3s ease, background 0.3s ease;
-        border: 0.5px solid rgba(255,255,255,0.07);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+        border: 1.5px solid var(--card-border);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
         text-decoration: none;
         display: block;
       }
       .card h3 { font-size: 16px; margin-bottom: 8px; }
-      .card p { font-size: 13px; line-height: 1.6; opacity: 0.7; }
-      .card:hover { background: rgba(42,42,74,0.95); transform: translateY(-5px); border-color: rgba(127,119,221,0.35); }
-
+      .card p { font-size: 13px; line-height: 1.6; opacity: var(--desc-opacity); }
+      .card:hover { background: var(--card-hover-bg); transform: translateY(-5px); border-color: var(--card-hover-border); }
+ 
       .helplines-box {
         margin: 40px auto 0;
         padding: 24px;
-        background: rgba(26,26,46,0.88);
+        background: var(--helpline-bg);
         backdrop-filter: blur(6px);
         border-radius: 15px;
         width: 420px;
         max-width: 90%;
-        border: 0.5px solid rgba(255,255,255,0.07);
+        border: 1.5px solid var(--card-border);
         position: relative;
         z-index: 1;
+        transition: background 0.4s;
       }
       .helplines-box h3 { font-size: 16px; margin-bottom: 6px; }
-      .helplines-box .sub { font-size: 13px; opacity: 0.5; margin-bottom: 20px; }
-
+      .helplines-box .sub { font-size: 13px; opacity: var(--sub-opacity); margin-bottom: 20px; }
+ 
       .helpline-card {
-        background: rgba(255,255,255,0.04);
-        border: 0.5px solid rgba(255,255,255,0.07);
+        background: var(--helpline-card-bg);
+        border: 1.5px solid var(--helpline-card-border);
         border-radius: 12px;
         padding: 14px 18px;
         margin-bottom: 10px;
@@ -220,11 +312,11 @@
       .helpline-info { flex: 1; }
       .helpline-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
       .helpline-desc { font-size: 12px; opacity: 0.45; }
-
+ 
       .call-btn {
         background: rgba(127,119,221,0.2);
         border: 0.5px solid rgba(127,119,221,0.4);
-        color: white;
+        color: var(--text);
         border-radius: 99px;
         padding: 8px 16px;
         font-size: 13px;
@@ -235,33 +327,33 @@
         white-space: nowrap;
       }
       .call-btn:hover { background: rgba(127,119,221,0.4); }
-
+ 
       .helpline-note {
         font-size: 11px;
-        opacity: 0.25;
+        opacity: var(--note-opacity);
         margin-top: 12px;
         text-align: center;
       }
-
+ 
       .disclaimer {
         margin: 24px auto 0;
         padding: 16px 24px;
-        background: rgba(26,26,46,0.6);
+        background: var(--disclaimer-bg);
         border-radius: 12px;
         font-size: 12px;
-        color: #555;
+        color: var(--disclaimer-color);
         max-width: 500px;
         position: relative;
         z-index: 1;
       }
-
+ 
       #feedbackBtn {
         position: fixed;
         bottom: 24px;
         right: 24px;
-        background: rgba(26,26,46,0.95);
-        border: 0.5px solid rgba(255,255,255,0.12);
-        color: rgba(255,255,255,0.7);
+        background: var(--feedback-btn-bg);
+        border: 1.5px solid var(--feedback-btn-border);
+        color: var(--feedback-btn-color);
         border-radius: 99px;
         padding: 10px 18px;
         font-size: 13px;
@@ -270,8 +362,8 @@
         z-index: 100;
         transition: background .2s, transform .15s;
       }
-      #feedbackBtn:hover { background: rgba(42,42,74,0.98); transform: scale(1.04); }
-
+      #feedbackBtn:hover { transform: scale(1.04); }
+ 
       #feedbackOverlay {
         display: none;
         position: fixed;
@@ -283,39 +375,40 @@
         align-items: center;
       }
       #feedbackOverlay.show { display: flex; }
-
+ 
       #feedbackPopup {
-        background: #1a1a2e;
-        border: 0.5px solid rgba(255,255,255,0.1);
+        background: var(--feedback-popup-bg);
+        border: 1.5px solid var(--input-border);
         border-radius: 20px;
         padding: 28px;
         width: 360px;
         max-width: 90%;
+        color: var(--text);
       }
       #feedbackPopup h3 { font-size: 17px; margin-bottom: 6px; }
       #feedbackPopup p { font-size: 13px; opacity: 0.5; margin-bottom: 18px; }
-
+ 
       #feedbackPopup select, #feedbackPopup textarea {
         width: 100%;
-        background: rgba(255,255,255,0.06);
-        border: 0.5px solid rgba(255,255,255,0.1);
+        background: var(--input-bg);
+        border: 1.5px solid var(--input-border);
         border-radius: 10px;
-        color: white;
+        color: var(--text);
         font-family: 'Poppins', sans-serif;
         font-size: 13px;
         padding: 10px 14px;
         outline: none;
         margin-bottom: 12px;
       }
-      #feedbackPopup select option { background: #1a1a2e; }
+      #feedbackPopup select option { background: var(--feedback-popup-bg); color: var(--text); }
       #feedbackPopup textarea { resize: none; line-height: 1.6; }
-
+ 
       .feedback-btns { display: flex; gap: 10px; margin-top: 4px; }
       .fb-cancel {
         flex: 1;
-        background: rgba(255,255,255,0.06);
-        border: 0.5px solid rgba(255,255,255,0.1);
-        color: white;
+        background: var(--input-bg);
+        border: 1.5px solid var(--input-border);
+        color: var(--text);
         border-radius: 99px;
         padding: 10px;
         font-size: 13px;
@@ -346,7 +439,9 @@
     </style>
   </head>
   <body>
-
+ 
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+ 
     <nav class="side-nav">
       <div class="brand">Mindspace</div>
       <a href="index.html" class="active"><span class="ico">🏠</span><span class="lbl">Home</span></a>
@@ -357,21 +452,21 @@
       <a href="community.html"><span class="ico">🫂</span><span class="lbl">Circle</span></a>
       <a href="memory.html"><span class="ico">🫙</span><span class="lbl">Memory</span></a>
     </nav>
-
+ 
     <div id="gardenLayer">
       <svg id="gardenSvg" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
-
+ 
     <div id="placeOverlay" onclick="handlePlacement(event)"></div>
     <div id="placeBanner">🌸 Tap anywhere to plant your flower</div>
-
+ 
     <div class="page-content">
       <h1>Mindspace</h1>
       <p class="tagline">A safe place for your mind</p>
       <p class="tagline">You don't have to figure it out alone</p>
-
-    <button class="get-started" onclick="window.location.href='started.html'">Get started</button>
-
+ 
+      <button class="get-started" onclick="window.location.href='started.html'">Get started</button>
+ 
       <div class="mood-section">
         <p class="mood-label">How are you feeling today?</p>
         <div class="mood-row">
@@ -384,7 +479,7 @@
         </div>
         <p class="mood-msg" id="moodMsg"></p>
       </div>
-
+ 
       <div class="cards-container">
         <a class="card" href="sage.html">
           <h3>💬 Talk to Sage</h3>
@@ -407,16 +502,16 @@
           <p>Type everything out. It never saves, just disappears.</p>
         </a>
         <a class="card" href="community.html">
-          <h3>🫂 Community </h3>
+          <h3>🫂 Community</h3>
           <p>Everyone here is carrying something. You're in good company.</p>
         </a>
       </div>
     </div>
-
+ 
     <div class="helplines-box">
       <h3>🆘 Crisis Helplines</h3>
       <p class="sub">You don't have to face this alone. Reach out, it's okay to ask for help.</p>
-
+ 
       <div class="helpline-card">
         <div class="helpline-info">
           <div class="helpline-name">iCall</div>
@@ -424,7 +519,7 @@
         </div>
         <a class="call-btn" href="tel:9152987821">📞 Call</a>
       </div>
-
+ 
       <div class="helpline-card">
         <div class="helpline-info">
           <div class="helpline-name">Vandrevala Foundation</div>
@@ -432,7 +527,7 @@
         </div>
         <a class="call-btn" href="tel:18602662345">📞 Call</a>
       </div>
-
+ 
       <div class="helpline-card">
         <div class="helpline-info">
           <div class="helpline-name">AASRA</div>
@@ -440,16 +535,16 @@
         </div>
         <a class="call-btn" href="tel:9820466627">📞 Call</a>
       </div>
-
+ 
       <p class="helpline-note">All helplines listed are publicly available services</p>
     </div>
-
+ 
     <div class="disclaimer">
       ⚠️ MindSpace is not a substitute for professional therapy or medical advice. If you are in crisis or need immediate help, please contact a trusted adult or call a helpline.
     </div>
-
+ 
     <button id="feedbackBtn" onclick="openFeedback()">🐛 Report an issue</button>
-
+ 
     <div id="feedbackOverlay">
       <div id="feedbackPopup">
         <h3>🐛 Report an issue</h3>
@@ -472,12 +567,31 @@
         <p class="fb-success" id="fbSuccess"></p>
       </div>
     </div>
-
+ 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
+ 
     <script>
       emailjs.init('ANzYZVPy4xrcZub6m');
-
+ 
+      // ===== THEME =====
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('ms_theme', theme);
+        document.body.style.backgroundColor = '';
+        var btn = document.getElementById('themeBtn');
+        btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+      }
+ 
+      function toggleTheme() {
+        var current = document.documentElement.getAttribute('data-theme');
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      }
+ 
+      // Load saved theme
+      var savedTheme = localStorage.getItem('ms_theme') || 'dark';
+      applyTheme(savedTheme);
+ 
+      // ===== FEEDBACK =====
       function openFeedback() {
         document.getElementById('feedbackOverlay').classList.add('show');
       }
@@ -512,12 +626,13 @@
       document.getElementById('feedbackOverlay').addEventListener('click', function(e) {
         if (e.target === this) closeFeedback();
       });
-
+ 
+      // ===== MOOD =====
       var moodBg = {
         happy:'#120f00', calm:'#001a0e', sad:'#1a0e00',
         angry:'#00101a', anxious:'#0e0018', tired:'#1a0010'
       };
-
+ 
       var palettes = [
         { p1:'#FF9ECD', p2:'#FF3D9A', center:'#FFD93D' },
         { p1:'#C084FC', p2:'#A855F7', center:'#FDE68A' },
@@ -530,12 +645,12 @@
         { p1:'#FED7AA', p2:'#FB923C', center:'#C084FC' },
         { p1:'#D9F99D', p2:'#86EFAC', center:'#F472B6' },
       ];
-
+ 
       var pendingMoodKey = null;
       var pendingMoodMsg = null;
-
+ 
       function rand(a, b) { return a + Math.random() * (b - a); }
-
+ 
       function drawFlower(f) {
         var s = f.scale, p = palettes[f.palette], x = f.x, y = f.y;
         var petalR = 13*s, petalD = 17*s;
@@ -550,7 +665,7 @@
         html += '</g>';
         return html;
       }
-
+ 
       function renderGarden() {
         var flowers = loadFlowers();
         var svg = document.getElementById('gardenSvg');
@@ -562,14 +677,14 @@
         flowers.forEach(function(f) { html += drawFlower(f); });
         svg.innerHTML = html;
       }
-
+ 
       function loadFlowers() {
         try { return JSON.parse(localStorage.getItem('ms_flowers')||'[]'); } catch(e) { return []; }
       }
       function saveFlowers(f) {
         try { localStorage.setItem('ms_flowers', JSON.stringify(f)); } catch(e) {}
       }
-
+ 
       function plantFlowerAt(x, y) {
         var flowers = loadFlowers();
         if (flowers.length >= 40) return;
@@ -583,36 +698,43 @@
         saveFlowers(flowers);
         renderGarden();
       }
-
+ 
       function enterPlacementMode(key, msg) {
         pendingMoodKey = key;
         pendingMoodMsg = msg;
         document.getElementById('placeOverlay').classList.add('active');
         document.getElementById('placeBanner').classList.add('active');
       }
-
+ 
       function exitPlacementMode() {
         document.getElementById('placeOverlay').classList.remove('active');
         document.getElementById('placeBanner').classList.remove('active');
       }
-
+ 
+      var moodBgLight = {
+        happy:'#fffbea', calm:'#eafff4', sad:'#fff0e8',
+        angry:'#eaf6ff', anxious:'#f5eaff', tired:'#ffeaf5'
+      };
+ 
       window.handlePlacement = function(e) {
         var x = e.pageX;
         var y = e.pageY;
         plantFlowerAt(x, y);
         exitPlacementMode();
-
+ 
         var el = document.getElementById('moodMsg');
         el.classList.remove('show');
         setTimeout(function() { el.textContent = pendingMoodMsg; el.classList.add('show'); }, 200);
-        document.body.style.backgroundColor = moodBg[pendingMoodKey] || '#0a0a0f';
+        var theme = document.documentElement.getAttribute('data-theme');
+        var bg = theme === 'light' ? (moodBgLight[pendingMoodKey] || '#f5f5f7') : (moodBg[pendingMoodKey] || '#0a0a0f');
+        document.body.style.backgroundColor = bg;
         localStorage.setItem('ms_last_mood', new Date().toDateString());
       };
-
+ 
       window.logMood = function(btn, key, msg) {
         document.querySelectorAll('.mood-btn').forEach(function(b) { b.classList.remove('picked'); });
         btn.classList.add('picked');
-
+ 
         var today = new Date().toDateString();
         if (localStorage.getItem('ms_last_mood') !== today) {
           enterPlacementMode(key, msg);
@@ -620,15 +742,17 @@
           var el = document.getElementById('moodMsg');
           el.classList.remove('show');
           setTimeout(function() { el.textContent = msg; el.classList.add('show'); }, 200);
-          document.body.style.backgroundColor = moodBg[key] || '#0a0a0f';
+          var theme = document.documentElement.getAttribute('data-theme');
+          var bg = theme === 'light' ? (moodBgLight[key] || '#f5f5f7') : (moodBg[key] || '#0a0a0f');
+          document.body.style.backgroundColor = bg;
         }
       };
-
+ 
       window.addEventListener('load', function() {
         renderGarden();
         window.addEventListener('resize', renderGarden);
       });
     </script>
-
+ 
   </body>
 </html>
