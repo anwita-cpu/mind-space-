@@ -1,82 +1,200 @@
+
+
+Community · HTML
 <!DOCTYPE html>
-<html>
+<html data-theme="dark">
 <head>
-  <title>Mindspace — Community </title>
+  <title>Mindspace — Community</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
+    html[data-theme="dark"] {
+      --bg: #0a0a0f;
+      --text: #ffffff;
+      --nav-bg: rgba(26,26,46,0.95);
+      --nav-border: rgba(255,255,255,0.07);
+      --compose-bg: rgba(26,26,46,0.88);
+      --compose-border: rgba(255,255,255,0.08);
+      --textarea-bg: rgba(255,255,255,0.06);
+      --textarea-border: rgba(255,255,255,0.1);
+      --textarea-color: #ffffff;
+      --placeholder: rgba(255,255,255,0.25);
+      --post-bg: rgba(26,26,46,0.7);
+      --post-border: rgba(255,255,255,0.07);
+      --reply-bg: rgba(255,255,255,0.04);
+      --reply-input-bg: rgba(255,255,255,0.06);
+      --reply-input-border: rgba(255,255,255,0.1);
+      --reply-btn-bg: rgba(127,119,221,0.3);
+      --reply-toggle-border: rgba(255,255,255,0.12);
+      --reply-toggle-color: rgba(255,255,255,0.5);
+      --subtext: rgba(255,255,255,0.5);
+      --label-opacity: 0.3;
+      --toggle-bg: rgba(255,255,255,0.08);
+      --toggle-border: rgba(255,255,255,0.15);
+    }
+ 
+    html[data-theme="light"] {
+      --bg: #f5f5f7;
+      --text: #1a1a2e;
+      --nav-bg: rgba(255,255,255,0.97);
+      --nav-border: rgba(0,0,0,0.75);
+      --compose-bg: rgba(255,255,255,0.97);
+      --compose-border: rgba(0,0,0,0.75);
+      --textarea-bg: rgba(245,245,247,0.9);
+      --textarea-border: rgba(0,0,0,0.75);
+      --textarea-color: #1a1a2e;
+      --placeholder: rgba(26,26,46,0.3);
+      --post-bg: rgba(255,255,255,0.95);
+      --post-border: rgba(0,0,0,0.75);
+      --reply-bg: rgba(0,0,0,0.04);
+      --reply-input-bg: rgba(245,245,247,0.9);
+      --reply-input-border: rgba(0,0,0,0.75);
+      --reply-btn-bg: rgba(127,119,221,0.2);
+      --reply-toggle-border: rgba(0,0,0,0.2);
+      --reply-toggle-color: rgba(26,26,46,0.5);
+      --subtext: rgba(26,26,46,0.5);
+      --label-opacity: 0.4;
+      --toggle-bg: rgba(255,255,255,0.97);
+      --toggle-border: rgba(0,0,0,0.75);
+    }
+ 
     body {
-      background-color: #0a0a0f;
-      color: white;
+      background-color: var(--bg);
+      color: var(--text);
       font-family: 'Poppins', sans-serif;
       min-height: 100vh;
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
-
-    nav {
-      background-color: rgba(26,26,46,0.95);
-      backdrop-filter: blur(6px);
-      padding: 15px;
+ 
+    /* ===== Sidebar nav ===== */
+    .side-nav {
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      width: 84px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      border-right: 1.5px solid var(--nav-border);
       display: flex;
-      gap: 20px;
-      justify-content: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 16px 0;
+      z-index: 100;
+      transition: background 0.4s;
     }
-    nav a { color: white; text-decoration: none; font-size: 16px; opacity: 0.8; }
-    nav a:hover { opacity: 1; }
-
+    .side-nav .brand { font-size: 12px; font-weight: 600; color: #b7b0ef; letter-spacing: .01em; margin-bottom: 14px; line-height: 1.2; text-align: center; }
+    .side-nav a {
+      width: 66px;
+      padding: 9px 0;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      color: var(--text);
+      opacity: 0.55;
+      transition: opacity .2s, background .2s;
+    }
+    .side-nav a .ico { font-size: 20px; line-height: 1; }
+    .side-nav a .lbl { font-size: 10px; letter-spacing: .02em; }
+    .side-nav a:hover { opacity: 1; background: rgba(127,119,221,0.08); }
+    .side-nav a.active { opacity: 1; background: rgba(127,119,221,0.22); }
+    .side-nav a.active .lbl { color: #cec9f5; }
+ 
+    @media (min-width: 721px) {
+      body { padding-left: 84px; }
+    }
+    @media (max-width: 720px) {
+      body { padding-bottom: 80px; }
+      .side-nav {
+        top: auto; bottom: 0; left: 0;
+        width: 100%; height: auto;
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 0;
+        padding: 6px 2px;
+        border-right: none;
+        border-top: 1.5px solid var(--nav-border);
+      }
+      .side-nav .brand { display: none; }
+      .side-nav a { width: auto; flex: 1; padding: 6px 0; }
+      .theme-toggle { top: 12px; right: 12px; }
+    }
+ 
+    .theme-toggle {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      z-index: 200;
+      background: var(--toggle-bg);
+      border: 1.5px solid var(--toggle-border);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .theme-toggle:hover { opacity: 0.8; }
+ 
     .page {
       max-width: 600px;
       margin: 0 auto;
       padding: 40px 20px 80px;
     }
-
+ 
     .header { text-align: center; margin-bottom: 36px; }
     .header h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
-    .header p { font-size: 14px; opacity: 0.5; line-height: 1.6; }
-
+    .header p { font-size: 14px; color: var(--subtext); line-height: 1.6; }
+ 
     .compose {
-      background: rgba(26,26,46,0.88);
-      border: 0.5px solid rgba(255,255,255,0.08);
+      background: var(--compose-bg);
+      border: 1.5px solid var(--compose-border);
       border-radius: 16px;
       padding: 20px;
       margin-bottom: 32px;
+      transition: background 0.4s;
     }
-
+ 
     .compose p {
       font-size: 13px;
-      opacity: 0.45;
+      color: var(--subtext);
       margin-bottom: 12px;
     }
-
+ 
     textarea {
       width: 100%;
-      background: rgba(255,255,255,0.06);
-      border: 0.5px solid rgba(255,255,255,0.1);
+      background: var(--textarea-bg);
+      border: 1.5px solid var(--textarea-border);
       border-radius: 12px;
-      color: white;
+      color: var(--textarea-color);
       font-family: 'Poppins', sans-serif;
       font-size: 14px;
       padding: 14px;
       resize: none;
       outline: none;
       line-height: 1.6;
-      transition: border-color .2s;
+      transition: border-color .2s, background 0.4s, color 0.4s;
     }
     textarea:focus { border-color: rgba(127,119,221,0.5); }
-    textarea::placeholder { color: rgba(255,255,255,0.25); }
-
+    textarea::placeholder { color: var(--placeholder); }
+ 
     .compose-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-top: 12px;
     }
-
-    .char-count { font-size: 12px; opacity: 0.3; }
-
+ 
+    .char-count { font-size: 12px; color: var(--subtext); }
+ 
     .send-btn {
       background: #7F77DD;
       border: none;
@@ -90,7 +208,7 @@
     }
     .send-btn:hover { opacity: 0.88; transform: scale(1.03); }
     .send-btn:disabled { opacity: 0.35; cursor: default; transform: none; }
-
+ 
     .status-msg {
       font-size: 13px;
       text-align: center;
@@ -103,48 +221,49 @@
     .status-msg.green { color: #5DCAA5; }
     .status-msg.red { color: #F09595; }
     .status-msg.yellow { color: #FAC775; }
-
+ 
     .feed-label {
       font-size: 11px;
-      opacity: 0.3;
+      opacity: var(--label-opacity);
       letter-spacing: .06em;
       text-transform: uppercase;
       margin-bottom: 16px;
     }
-
+ 
     .post-card {
-      background: rgba(26,26,46,0.7);
-      border: 0.5px solid rgba(255,255,255,0.07);
+      background: var(--post-bg);
+      border: 1.5px solid var(--post-border);
       border-radius: 16px;
       padding: 20px;
       margin-bottom: 16px;
       animation: fadeIn .4s ease;
+      transition: background 0.4s;
     }
-
+ 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
+ 
     .post-text {
       font-size: 15px;
       line-height: 1.7;
       opacity: 0.9;
       margin-bottom: 14px;
     }
-
+ 
     .post-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
-      opacity: 0.35;
+      color: var(--subtext);
     }
-
+ 
     .reply-toggle {
       background: none;
-      border: 0.5px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.5);
+      border: 1.5px solid var(--reply-toggle-border);
+      color: var(--reply-toggle-color);
       border-radius: 99px;
       padding: 5px 14px;
       font-size: 12px;
@@ -152,12 +271,12 @@
       cursor: pointer;
       transition: background .2s;
     }
-    .reply-toggle:hover { background: rgba(255,255,255,0.07); }
-
+    .reply-toggle:hover { background: rgba(127,119,221,0.08); }
+ 
     .delete-btn {
       background: none;
-      border: 0.5px solid rgba(240,149,149,0.3);
-      color: rgba(240,149,149,0.6);
+      border: 1.5px solid rgba(240,149,149,0.4);
+      color: rgba(240,149,149,0.7);
       border-radius: 99px;
       padding: 5px 14px;
       font-size: 12px;
@@ -167,11 +286,11 @@
     }
     .delete-btn:hover { background: rgba(240,149,149,0.1); }
     .delete-btn:disabled { opacity: 0.3; cursor: default; }
-
+ 
     .replies { margin-top: 14px; }
-
+ 
     .reply-card {
-      background: rgba(255,255,255,0.04);
+      background: var(--reply-bg);
       border-radius: 10px;
       padding: 12px 14px;
       margin-bottom: 8px;
@@ -180,32 +299,32 @@
       opacity: 0.8;
       animation: fadeIn .3s ease;
     }
-
+ 
     .reply-compose {
       display: flex;
       gap: 8px;
       margin-top: 10px;
     }
-
+ 
     .reply-input {
       flex: 1;
-      background: rgba(255,255,255,0.06);
-      border: 0.5px solid rgba(255,255,255,0.1);
+      background: var(--reply-input-bg);
+      border: 1.5px solid var(--reply-input-border);
       border-radius: 99px;
-      color: white;
+      color: var(--text);
       font-family: 'Poppins', sans-serif;
       font-size: 13px;
       padding: 8px 16px;
       outline: none;
-      transition: border-color .2s;
+      transition: border-color .2s, background 0.4s;
     }
     .reply-input:focus { border-color: rgba(127,119,221,0.5); }
-    .reply-input::placeholder { color: rgba(255,255,255,0.2); }
-
+    .reply-input::placeholder { color: var(--placeholder); }
+ 
     .reply-send {
-      background: rgba(127,119,221,0.3);
+      background: var(--reply-btn-bg);
       border: none;
-      color: white;
+      color: var(--text);
       border-radius: 99px;
       padding: 8px 16px;
       font-size: 13px;
@@ -214,9 +333,9 @@
       transition: background .2s;
       white-space: nowrap;
     }
-    .reply-send:hover { background: rgba(127,119,221,0.5); }
+    .reply-send:hover { background: rgba(127,119,221,0.5); color: white; }
     .reply-send:disabled { opacity: 0.35; cursor: default; }
-
+ 
     .empty-state {
       text-align: center;
       padding: 60px 20px;
@@ -224,40 +343,43 @@
       font-size: 14px;
       line-height: 1.8;
     }
-
+ 
     .loading {
       text-align: center;
       padding: 40px;
       opacity: 0.3;
       font-size: 14px;
     }
-
+ 
     .checking-msg {
       font-size: 12px;
-      opacity: 0.4;
+      color: var(--subtext);
       margin-top: 8px;
       min-height: 16px;
     }
   </style>
 </head>
 <body>
-
-<nav>
-  <a href="index.html">Home</a>
-  <a href="sage.html">Sage</a>
-  <a href="tracker.html">Mood</a>
-  <a href="toolkit.html">Coping</a>
-  <a href="community.html">Community</a>
-  <a href="vent.html">Vent</a>
-  <a href="memory.html">Memory</a>
+ 
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+ 
+<nav class="side-nav">
+  <div class="brand">Mindspace</div>
+  <a href="index.html"><span class="ico">🏠</span><span class="lbl">Home</span></a>
+  <a href="sage.html"><span class="ico">💬</span><span class="lbl">Sage</span></a>
+  <a href="tracker.html"><span class="ico">📊</span><span class="lbl">Mood</span></a>
+  <a href="toolkit.html"><span class="ico">🧘</span><span class="lbl">Coping</span></a>
+  <a href="vent.html"><span class="ico">💨</span><span class="lbl">Vent</span></a>
+  <a href="community.html" class="active"><span class="ico">🫂</span><span class="lbl">Circle</span></a>
+  <a href="memory.html"><span class="ico">🫙</span><span class="lbl">Memory</span></a>
 </nav>
-
+ 
 <div class="page">
   <div class="header">
     <h1>You're not alone 🤍</h1>
     <p>A quiet space to share what you're feeling.<br>Everyone here is going through something too.</p>
   </div>
-
+ 
   <div class="compose">
     <p>Share something — anonymously, safely.</p>
     <textarea id="postInput" rows="3" maxlength="280" placeholder="What's on your mind today..."></textarea>
@@ -267,17 +389,32 @@
       <button class="send-btn" id="sendBtn" onclick="submitPost()">Share</button>
     </div>
   </div>
-
+ 
   <div class="status-msg" id="statusMsg"></div>
-
+ 
   <p class="feed-label">Recent thoughts</p>
   <div id="feed"><div class="loading">loading...</div></div>
 </div>
-
+ 
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ms_theme', theme);
+    var btn = document.getElementById('themeBtn');
+    btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  }
+  var savedTheme = localStorage.getItem('ms_theme') || 'dark';
+  applyTheme(savedTheme);
+</script>
+ 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, getDocs, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+ 
   const firebaseConfig = {
     apiKey: "AIzaSyCdM39QjJ0m3f9wob5qqacgHpnihMIfsW0",
     authDomain: "mindspace-18083.firebaseapp.com",
@@ -286,31 +423,26 @@
     messagingSenderId: "1091007788631",
     appId: "1:1091007788631:web:57a22d804d3787b5685512"
   };
-
+ 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-
+ 
   var myPostIds = new Set();
-
+ 
   document.getElementById('postInput').addEventListener('input', function() {
     document.getElementById('charCount').textContent = this.value.length + ' / 280';
   });
-
+ 
   async function cleanOldPosts() {
     var cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
     var q = query(collection(db, 'posts'), where('createdAt', '<', cutoff));
     var snap = await getDocs(q);
     snap.forEach(async function(d) { await deleteDoc(doc(db, 'posts', d.id)); });
   }
-
-  // Moderation using Groq via Cloudflare worker
+ 
   async function checkWithGroq(text, isReply) {
     var systemPrompt = 'You are a strict content moderator for a teen mental health app called MindSpace. Your job is to decide if a message is appropriate for this space. Reply with ONLY one word — no punctuation, no explanation.\n\nRules:\n- "safe" = genuine emotional expression, mental health topic, feelings, personal struggles, support, encouragement\n- "mean" = bullying, mocking, cruel, targeting someone, hateful\n- "unrelated" = anything NOT about emotions, mental health, or personal wellbeing. This includes music, albums, sports, food, movies, TV shows, celebrities, news, random topics, jokes, spam\n- "crisis" = expressing suicidal intent or immediate danger\n\nBe strict about "unrelated". If it is not clearly about feelings or mental health, say "unrelated".';
-
-    var userPrompt = isReply
-      ? 'Moderate this reply: "' + text + '"'
-      : 'Moderate this post: "' + text + '"';
-
+    var userPrompt = isReply ? 'Moderate this reply: "' + text + '"' : 'Moderate this post: "' + text + '"';
     try {
       var res = await fetch('https://sage-proxy.anwitaghosh20.workers.dev', {
         method: 'POST',
@@ -327,113 +459,65 @@
       var data = await res.json();
       var verdict = data.choices?.[0]?.message?.content || 'safe';
       return verdict.trim().toLowerCase().replace(/[^a-z]/g, '');
-    } catch(e) {
-      return 'safe';
-    }
+    } catch(e) { return 'safe'; }
   }
-
+ 
   function showStatus(msg, type) {
     var el = document.getElementById('statusMsg');
     el.textContent = msg;
     el.className = 'status-msg show ' + type;
     setTimeout(function() { el.classList.remove('show'); }, 3500);
   }
-
+ 
   window.submitPost = async function() {
     var input = document.getElementById('postInput');
     var text = input.value.trim();
     if (!text) return;
-
     var btn = document.getElementById('sendBtn');
     var checking = document.getElementById('checkingMsg');
     btn.disabled = true;
     checking.textContent = 'Sage is reading this...';
-
     var verdict = await checkWithGroq(text, false);
     checking.textContent = '';
-
-    if (verdict === 'mean') {
-      showStatus('This might not land the way you intend — maybe try rewording it? 💙', 'yellow');
-      btn.disabled = false;
-      return;
-    }
-    if (verdict === 'unrelated') {
-      showStatus('This space is just for feelings and support 🌿', 'yellow');
-      btn.disabled = false;
-      return;
-    }
-    if (verdict === 'crisis') {
-      showStatus('It sounds like you might need some support right now. Please talk to Sage 💙', 'red');
-      setTimeout(function() { window.location.href = 'sage.html'; }, 2500);
-      btn.disabled = false;
-      return;
-    }
-
+    if (verdict === 'mean') { showStatus('This might not land the way you intend — maybe try rewording it? 💙', 'yellow'); btn.disabled = false; return; }
+    if (verdict === 'unrelated') { showStatus('This space is just for feelings and support 🌿', 'yellow'); btn.disabled = false; return; }
+    if (verdict === 'crisis') { showStatus('It sounds like you might need some support right now. Please talk to Sage 💙', 'red'); setTimeout(function() { window.location.href = 'sage.html'; }, 2500); btn.disabled = false; return; }
     try {
-      var newRef = await addDoc(collection(db, 'posts'), {
-        text: text,
-        createdAt: serverTimestamp(),
-      });
+      var newRef = await addDoc(collection(db, 'posts'), { text: text, createdAt: serverTimestamp() });
       myPostIds.add(newRef.id);
       input.value = '';
       document.getElementById('charCount').textContent = '0 / 280';
       showStatus('Your words are out there 🌸', 'green');
-    } catch(e) {
-      showStatus('Something went wrong — try again', 'red');
-    }
+    } catch(e) { showStatus('Something went wrong — try again', 'red'); }
     btn.disabled = false;
   };
-
+ 
   window.submitReply = async function(postId, inputEl, btn) {
     var text = inputEl.value.trim();
     if (!text) return;
     btn.disabled = true;
     inputEl.placeholder = 'Sage is reading...';
-
     var verdict = await checkWithGroq(text, true);
     inputEl.placeholder = 'Send some support...';
-
-    if (verdict === 'mean') {
-      inputEl.value = '';
-      inputEl.placeholder = 'That might hurt — try something kinder 💙';
-      btn.disabled = false;
-      return;
-    }
-    if (verdict === 'unrelated') {
-      inputEl.value = '';
-      inputEl.placeholder = 'Keep replies supportive 🌿';
-      btn.disabled = false;
-      return;
-    }
-    if (verdict === 'crisis') {
-      inputEl.value = '';
-      inputEl.placeholder = 'Please reach out to Sage 💙';
-      btn.disabled = false;
-      return;
-    }
-
+    if (verdict === 'mean') { inputEl.value = ''; inputEl.placeholder = 'That might hurt — try something kinder 💙'; btn.disabled = false; return; }
+    if (verdict === 'unrelated') { inputEl.value = ''; inputEl.placeholder = 'Keep replies supportive 🌿'; btn.disabled = false; return; }
+    if (verdict === 'crisis') { inputEl.value = ''; inputEl.placeholder = 'Please reach out to Sage 💙'; btn.disabled = false; return; }
     try {
-      await addDoc(collection(db, 'posts', postId, 'replies'), {
-        text: text,
-        createdAt: serverTimestamp(),
-      });
+      await addDoc(collection(db, 'posts', postId, 'replies'), { text: text, createdAt: serverTimestamp() });
       inputEl.value = '';
     } catch(e) {}
     btn.disabled = false;
   };
-
+ 
   window.deletePost = async function(postId, btn) {
     btn.disabled = true;
     btn.textContent = 'deleting...';
     try {
       await deleteDoc(doc(db, 'posts', postId));
       myPostIds.delete(postId);
-    } catch(e) {
-      btn.disabled = false;
-      btn.textContent = '🗑 delete';
-    }
+    } catch(e) { btn.disabled = false; btn.textContent = '🗑 delete'; }
   };
-
+ 
   window.toggleReplies = async function(postId, btn) {
     var repliesDiv = document.getElementById('replies-' + postId);
     var replyList = document.getElementById('replyList-' + postId);
@@ -456,11 +540,11 @@
       btn.textContent = '💬 reply';
     }
   };
-
+ 
   function escapeHtml(t) {
     return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
-
+ 
   function timeAgo(ts) {
     if (!ts) return 'just now';
     var diff = Math.floor((Date.now() - ts.toDate()) / 1000);
@@ -469,7 +553,7 @@
     if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
     return Math.floor(diff/86400) + 'd ago';
   }
-
+ 
   function renderPost(postDoc) {
     var d = postDoc.data();
     var id = postDoc.id;
@@ -496,7 +580,7 @@
     `;
     return div;
   }
-
+ 
   cleanOldPosts();
   var q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
   onSnapshot(q, function(snap) {
@@ -506,11 +590,18 @@
       return;
     }
     feed.innerHTML = '';
-    snap.forEach(function(d) {
-      feed.appendChild(renderPost(d));
-    });
+    snap.forEach(function(d) { feed.appendChild(renderPost(d)); });
   });
 </script>
-
+ 
 </body>
 </html>
+ 
+
+
+
+
+
+
+
+
