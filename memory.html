@@ -1,51 +1,165 @@
+
+
+Memory · HTML
 <!DOCTYPE html>
-<html>
+<html data-theme="dark">
 <head>
   <title>Mindspace — Memory Jar</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
+    html[data-theme="dark"] {
+      --bg: #0a0a0f;
+      --text: #ffffff;
+      --nav-bg: rgba(26,26,46,0.95);
+      --nav-border: rgba(255,255,255,0.07);
+      --modal-bg: #1a1a2e;
+      --modal-border: rgba(255,255,255,0.1);
+      --textarea-bg: rgba(255,255,255,0.06);
+      --textarea-border: rgba(255,255,255,0.1);
+      --textarea-color: #ffffff;
+      --placeholder: rgba(255,255,255,0.25);
+      --upload-bg: rgba(255,255,255,0.04);
+      --upload-border: rgba(255,255,255,0.15);
+      --btn-cancel-bg: rgba(255,255,255,0.06);
+      --btn-cancel-border: rgba(255,255,255,0.1);
+      --btn-close-bg: rgba(255,255,255,0.08);
+      --subtext: rgba(255,255,255,0.5);
+      --toggle-bg: rgba(255,255,255,0.08);
+      --toggle-border: rgba(255,255,255,0.15);
+      --empty-color: rgba(255,255,255,0.3);
+    }
+ 
+    html[data-theme="light"] {
+      --bg: #f5f5f7;
+      --text: #1a1a2e;
+      --nav-bg: rgba(255,255,255,0.97);
+      --nav-border: rgba(0,0,0,0.75);
+      --modal-bg: #ffffff;
+      --modal-border: rgba(0,0,0,0.75);
+      --textarea-bg: rgba(245,245,247,0.9);
+      --textarea-border: rgba(0,0,0,0.75);
+      --textarea-color: #1a1a2e;
+      --placeholder: rgba(26,26,46,0.3);
+      --upload-bg: rgba(0,0,0,0.03);
+      --upload-border: rgba(0,0,0,0.3);
+      --btn-cancel-bg: rgba(0,0,0,0.05);
+      --btn-cancel-border: rgba(0,0,0,0.75);
+      --btn-close-bg: rgba(0,0,0,0.06);
+      --subtext: rgba(26,26,46,0.5);
+      --toggle-bg: rgba(255,255,255,0.97);
+      --toggle-border: rgba(0,0,0,0.75);
+      --empty-color: rgba(26,26,46,0.3);
+    }
+ 
     body {
-      background-color: #0a0a0f;
-      color: white;
+      background-color: var(--bg);
+      color: var(--text);
       font-family: 'Poppins', sans-serif;
       min-height: 100vh;
       overflow: hidden;
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
-
-    nav {
-      background-color: rgba(26,26,46,0.95);
-      backdrop-filter: blur(6px);
-      padding: 15px;
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      position: relative;
-      z-index: 10;
-    }
-    nav a { color: white; text-decoration: none; font-size: 16px; opacity: 0.8; }
-    nav a:hover { opacity: 1; }
-
-    #bubbleCanvas {
+ 
+    /* ===== Sidebar nav ===== */
+    .side-nav {
       position: fixed;
       top: 0; left: 0;
-      width: 100%; height: 100%;
+      height: 100vh;
+      width: 84px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      border-right: 1.5px solid var(--nav-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 16px 0;
+      z-index: 100;
+      transition: background 0.4s;
+    }
+    .side-nav .brand { font-size: 12px; font-weight: 600; color: #b7b0ef; letter-spacing: .01em; margin-bottom: 14px; line-height: 1.2; text-align: center; }
+    .side-nav a {
+      width: 66px;
+      padding: 9px 0;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      color: var(--text);
+      opacity: 0.55;
+      transition: opacity .2s, background .2s;
+    }
+    .side-nav a .ico { font-size: 20px; line-height: 1; }
+    .side-nav a .lbl { font-size: 10px; letter-spacing: .02em; }
+    .side-nav a:hover { opacity: 1; background: rgba(127,119,221,0.08); }
+    .side-nav a.active { opacity: 1; background: rgba(127,119,221,0.22); }
+    .side-nav a.active .lbl { color: #cec9f5; }
+ 
+    @media (min-width: 721px) {
+      body { padding-left: 84px; }
+      #bubbleCanvas { left: 84px; width: calc(100% - 84px); }
+    }
+    @media (max-width: 720px) {
+      body { padding-bottom: 80px; }
+      .side-nav {
+        top: auto; bottom: 0; left: 0;
+        width: 100%; height: auto;
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 0;
+        padding: 6px 2px;
+        border-right: none;
+        border-top: 1.5px solid var(--nav-border);
+      }
+      .side-nav .brand { display: none; }
+      .side-nav a { width: auto; flex: 1; padding: 6px 0; }
+      .theme-toggle { top: 12px; right: 12px; }
+      #bubbleCanvas { left: 0; width: 100%; }
+    }
+ 
+    .theme-toggle {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      z-index: 200;
+      background: var(--toggle-bg);
+      border: 1.5px solid var(--toggle-border);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .theme-toggle:hover { opacity: 0.8; }
+ 
+    #bubbleCanvas {
+      position: fixed;
+      top: 0;
+      height: 100%;
       z-index: 0;
     }
-
+ 
     .empty-state {
       position: fixed;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
-      opacity: 0.3;
+      color: var(--empty-color);
       font-size: 14px;
       line-height: 2;
       z-index: 1;
       pointer-events: none;
     }
-
+ 
     #addBtn {
       position: fixed;
       bottom: 28px;
@@ -66,7 +180,7 @@
       justify-content: center;
     }
     #addBtn:hover { transform: scale(1.1); opacity: 0.9; }
-
+ 
     .overlay {
       display: none;
       position: fixed;
@@ -78,24 +192,26 @@
       align-items: center;
     }
     .overlay.show { display: flex; }
-
+ 
     .modal {
-      background: #1a1a2e;
-      border: 0.5px solid rgba(255,255,255,0.1);
+      background: var(--modal-bg);
+      border: 1.5px solid var(--modal-border);
       border-radius: 20px;
       padding: 28px;
       width: 360px;
       max-width: 90%;
+      color: var(--text);
+      transition: background 0.4s;
     }
     .modal h3 { font-size: 18px; margin-bottom: 6px; }
-    .modal p { font-size: 13px; opacity: 0.5; margin-bottom: 20px; }
-
+    .modal p { font-size: 13px; color: var(--subtext); margin-bottom: 20px; }
+ 
     .modal textarea {
       width: 100%;
-      background: rgba(255,255,255,0.06);
-      border: 0.5px solid rgba(255,255,255,0.1);
+      background: var(--textarea-bg);
+      border: 1.5px solid var(--textarea-border);
       border-radius: 12px;
-      color: white;
+      color: var(--textarea-color);
       font-family: 'Poppins', sans-serif;
       font-size: 14px;
       padding: 12px 14px;
@@ -103,25 +219,26 @@
       outline: none;
       line-height: 1.6;
       margin-bottom: 12px;
+      transition: border-color .2s, background 0.4s;
     }
     .modal textarea:focus { border-color: rgba(127,119,221,0.5); }
-    .modal textarea::placeholder { color: rgba(255,255,255,0.25); }
-
+    .modal textarea::placeholder { color: var(--placeholder); }
+ 
     .photo-upload {
       width: 100%;
-      background: rgba(255,255,255,0.04);
-      border: 0.5px dashed rgba(255,255,255,0.15);
+      background: var(--upload-bg);
+      border: 1.5px dashed var(--upload-border);
       border-radius: 12px;
       padding: 16px;
       text-align: center;
       cursor: pointer;
       font-size: 13px;
-      opacity: 0.6;
+      color: var(--subtext);
       margin-bottom: 12px;
       transition: background .2s;
     }
-    .photo-upload:hover { background: rgba(255,255,255,0.08); }
-
+    .photo-upload:hover { background: rgba(127,119,221,0.06); }
+ 
     #photoPreview {
       width: 100%;
       border-radius: 10px;
@@ -130,15 +247,15 @@
       max-height: 160px;
       object-fit: cover;
     }
-
+ 
     #fileInput { display: none; }
-
+ 
     .modal-btns { display: flex; gap: 10px; }
     .btn-cancel {
       flex: 1;
-      background: rgba(255,255,255,0.06);
-      border: 0.5px solid rgba(255,255,255,0.1);
-      color: white;
+      background: var(--btn-cancel-bg);
+      border: 1.5px solid var(--btn-cancel-border);
+      color: var(--text);
       border-radius: 99px;
       padding: 11px;
       font-size: 13px;
@@ -159,15 +276,17 @@
     }
     .btn-save:hover { opacity: 0.88; }
     .btn-save:disabled { opacity: 0.35; cursor: default; }
-
+ 
     #memoryPopup {
-      background: #1a1a2e;
-      border: 0.5px solid rgba(255,255,255,0.1);
+      background: var(--modal-bg);
+      border: 1.5px solid var(--modal-border);
       border-radius: 20px;
       padding: 24px;
       width: 340px;
       max-width: 90%;
       text-align: center;
+      color: var(--text);
+      transition: background 0.4s;
     }
     #memoryPopup img {
       width: 100%;
@@ -184,14 +303,14 @@
     }
     #memoryDate {
       font-size: 12px;
-      opacity: 0.35;
+      color: var(--subtext);
       margin-bottom: 18px;
     }
     .popup-btns { display: flex; gap: 10px; }
     .btn-delete {
       flex: 1;
       background: rgba(240,149,149,0.1);
-      border: 0.5px solid rgba(240,149,149,0.3);
+      border: 1.5px solid rgba(240,149,149,0.4);
       color: rgba(240,149,149,0.8);
       border-radius: 99px;
       padding: 10px;
@@ -201,9 +320,9 @@
     }
     .btn-close {
       flex: 2;
-      background: rgba(255,255,255,0.08);
-      border: none;
-      color: white;
+      background: var(--btn-close-bg);
+      border: 1.5px solid var(--btn-cancel-border);
+      color: var(--text);
       border-radius: 99px;
       padding: 10px;
       font-size: 13px;
@@ -213,25 +332,28 @@
   </style>
 </head>
 <body>
-
-<nav>
-  <a href="index.html">Home</a>
-  <a href="sage.html">Sage</a>
-  <a href="tracker.html">Mood</a>
-  <a href="toolkit.html">Coping</a>
-  <a href="vent.html">Vent</a>
-  <a href="community.html">Community</a>
-  <a href="memory.html">Memory</a>
+ 
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+ 
+<nav class="side-nav">
+  <div class="brand">Mindspace</div>
+  <a href="index.html"><span class="ico">🏠</span><span class="lbl">Home</span></a>
+  <a href="sage.html"><span class="ico">💬</span><span class="lbl">Sage</span></a>
+  <a href="tracker.html"><span class="ico">📊</span><span class="lbl">Mood</span></a>
+  <a href="toolkit.html"><span class="ico">🧘</span><span class="lbl">Coping</span></a>
+  <a href="vent.html"><span class="ico">💨</span><span class="lbl">Vent</span></a>
+  <a href="community.html"><span class="ico">🫂</span><span class="lbl">Circle</span></a>
+  <a href="memory.html" class="active"><span class="ico">🫙</span><span class="lbl">Memory</span></a>
 </nav>
-
+ 
 <canvas id="bubbleCanvas"></canvas>
-
+ 
 <div class="empty-state" id="emptyState">
   🫙<br>Your memory jar is empty<br>Tap + to add your first happy memory
 </div>
-
+ 
 <button id="addBtn" onclick="openAddModal()">+</button>
-
+ 
 <div class="overlay" id="addOverlay">
   <div class="modal">
     <h3>🫧 New memory</h3>
@@ -248,7 +370,7 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="overlay" id="viewOverlay">
   <div id="memoryPopup">
     <img id="popupImg" src="" alt="">
@@ -260,11 +382,26 @@
     </div>
   </div>
 </div>
-
+ 
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ms_theme', theme);
+    var btn = document.getElementById('themeBtn');
+    btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  }
+  var savedTheme = localStorage.getItem('ms_theme') || 'dark';
+  applyTheme(savedTheme);
+</script>
+ 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, orderBy, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+ 
   const firebaseConfig = {
     apiKey: "AIzaSyCdM39QjJ0m3f9wob5qqacgHpnihMIfsW0",
     authDomain: "mindspace-18083.firebaseapp.com",
@@ -273,11 +410,10 @@
     messagingSenderId: "1091007788631",
     appId: "1:1091007788631:web:57a22d804d3787b5685512"
   };
-
+ 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-
-  // Give each device/browser a unique anonymous ID, stored locally forever
+ 
   function getUserId() {
     var id = localStorage.getItem('ms_user_id');
     if (!id) {
@@ -287,15 +423,15 @@
     return id;
   }
   var userId = getUserId();
-
+ 
   var memories = [];
   var bubbles = [];
   var selectedId = null;
   var compressedPhoto = null;
-
+ 
   var canvas = document.getElementById('bubbleCanvas');
   var ctx = canvas.getContext('2d');
-
+ 
   var colors = [
     ['#C084FC','#A855F7'],
     ['#F9A8D4','#EC4899'],
@@ -306,14 +442,14 @@
     ['#A5F3FC','#22D3EE'],
     ['#D9F99D','#86EFAC'],
   ];
-
+ 
   function resize() {
-    canvas.width = window.innerWidth;
+    canvas.width = canvas.offsetWidth;
     canvas.height = window.innerHeight;
   }
   resize();
   window.addEventListener('resize', resize);
-
+ 
   function makeBubble(memory, index) {
     var r = 55 + Math.min(memory.text.length * 0.3, 30);
     var col = colors[index % colors.length];
@@ -333,12 +469,12 @@
       targetScale: 1,
     };
   }
-
+ 
   function drawBubble(b) {
     ctx.save();
     ctx.translate(b.x, b.y);
     ctx.scale(b.scale, b.scale);
-
+ 
     var grad = ctx.createRadialGradient(-b.r*0.3, -b.r*0.3, b.r*0.1, 0, 0, b.r);
     grad.addColorStop(0, b.col1 + 'cc');
     grad.addColorStop(1, b.col2 + '88');
@@ -346,7 +482,7 @@
     ctx.arc(0, 0, b.r, 0, Math.PI * 2);
     ctx.fillStyle = grad;
     ctx.fill();
-
+ 
     var shimGrad = ctx.createRadialGradient(-b.r*0.4, -b.r*0.4, 0, -b.r*0.4, -b.r*0.4, b.r*0.6);
     shimGrad.addColorStop(0, 'rgba(255,255,255,0.35)');
     shimGrad.addColorStop(1, 'rgba(255,255,255,0)');
@@ -354,17 +490,17 @@
     ctx.arc(0, 0, b.r, 0, Math.PI * 2);
     ctx.fillStyle = shimGrad;
     ctx.fill();
-
+ 
     ctx.beginPath();
     ctx.arc(0, 0, b.r, 0, Math.PI * 2);
     ctx.strokeStyle = 'rgba(255,255,255,0.3)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
-
+ 
     ctx.fillStyle = 'rgba(255,255,255,0.95)';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-
+ 
     if (b.photo) {
       ctx.font = '22px serif';
       ctx.fillText('📷', 0, -10);
@@ -374,16 +510,12 @@
       var lines = [];
       words.forEach(function(w) {
         var test = line + w + ' ';
-        if (ctx.measureText(test).width > b.r * 1.4 && line) {
-          lines.push(line.trim());
-          line = w + ' ';
-        } else { line = test; }
+        if (ctx.measureText(test).width > b.r * 1.4 && line) { lines.push(line.trim()); line = w + ' '; }
+        else { line = test; }
       });
       if (line) lines.push(line.trim());
       lines = lines.slice(0, 2);
-      lines.forEach(function(l, i) {
-        ctx.fillText(l, 0, 14 + i * 14);
-      });
+      lines.forEach(function(l, i) { ctx.fillText(l, 0, 14 + i * 14); });
     } else {
       ctx.font = '500 11px Poppins, sans-serif';
       var words = b.text.split(' ');
@@ -391,22 +523,18 @@
       var lines = [];
       words.forEach(function(w) {
         var test = line + w + ' ';
-        if (ctx.measureText(test).width > b.r * 1.5 && line) {
-          lines.push(line.trim());
-          line = w + ' ';
-        } else { line = test; }
+        if (ctx.measureText(test).width > b.r * 1.5 && line) { lines.push(line.trim()); line = w + ' '; }
+        else { line = test; }
       });
       if (line) lines.push(line.trim());
       lines = lines.slice(0, 3);
       var startY = -(lines.length - 1) * 8;
-      lines.forEach(function(l, i) {
-        ctx.fillText(l, 0, startY + i * 16);
-      });
+      lines.forEach(function(l, i) { ctx.fillText(l, 0, startY + i * 16); });
     }
-
+ 
     ctx.restore();
   }
-
+ 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     bubbles.forEach(function(b) {
@@ -420,11 +548,10 @@
     });
     requestAnimationFrame(animate);
   }
-
+ 
   animate();
-
+ 
   async function loadMemories() {
-    // ONLY load memories belonging to this user's device
     var q = query(
       collection(db, 'memories'),
       where('userId', '==', userId),
@@ -440,9 +567,9 @@
     document.getElementById('emptyState').style.display = memories.length === 0 ? 'block' : 'none';
     memories.forEach(function(m, i) { bubbles.push(makeBubble(m, i)); });
   }
-
+ 
   loadMemories();
-
+ 
   canvas.addEventListener('click', function(e) {
     var rect = canvas.getBoundingClientRect();
     var mx = e.clientX - rect.left;
@@ -450,13 +577,10 @@
     for (var i = bubbles.length - 1; i >= 0; i--) {
       var b = bubbles[i];
       var dx = mx - b.x, dy = my - b.y;
-      if (Math.sqrt(dx*dx + dy*dy) <= b.r) {
-        openViewModal(b);
-        return;
-      }
+      if (Math.sqrt(dx*dx + dy*dy) <= b.r) { openViewModal(b); return; }
     }
   });
-
+ 
   canvas.addEventListener('mousemove', function(e) {
     var rect = canvas.getBoundingClientRect();
     var mx = e.clientX - rect.left;
@@ -464,21 +588,16 @@
     var hit = false;
     bubbles.forEach(function(b) {
       var dx = mx - b.x, dy = my - b.y;
-      if (Math.sqrt(dx*dx + dy*dy) <= b.r) {
-        b.targetScale = 1.1;
-        canvas.style.cursor = 'pointer';
-        hit = true;
-      } else {
-        b.targetScale = 1;
-      }
+      if (Math.sqrt(dx*dx + dy*dy) <= b.r) { b.targetScale = 1.1; canvas.style.cursor = 'pointer'; hit = true; }
+      else { b.targetScale = 1; }
     });
     if (!hit) canvas.style.cursor = 'default';
   });
-
+ 
   window.openAddModal = function() {
     document.getElementById('addOverlay').classList.add('show');
   };
-
+ 
   window.closeAddModal = function() {
     document.getElementById('addOverlay').classList.remove('show');
     document.getElementById('memoryText').value = '';
@@ -486,7 +605,7 @@
     document.getElementById('photoPreview').src = '';
     compressedPhoto = null;
   };
-
+ 
   window.handlePhoto = function(e) {
     var file = e.target.files[0];
     if (!file) return;
@@ -511,7 +630,7 @@
     };
     reader.readAsDataURL(file);
   };
-
+ 
   window.saveMemory = async function() {
     var text = document.getElementById('memoryText').value.trim();
     if (!text) return;
@@ -533,17 +652,12 @@
     btn.disabled = false;
     btn.textContent = 'Save memory';
   };
-
+ 
   function openViewModal(b) {
     selectedId = b.id;
-    var popup = document.getElementById('memoryPopup');
     var img = document.getElementById('popupImg');
-    if (b.photo) {
-      img.src = b.photo;
-      img.style.display = 'block';
-    } else {
-      img.style.display = 'none';
-    }
+    if (b.photo) { img.src = b.photo; img.style.display = 'block'; }
+    else { img.style.display = 'none'; }
     document.getElementById('popupText').textContent = b.text;
     var mem = memories.find(function(m) { return m.id === b.id; });
     if (mem && mem.createdAt) {
@@ -554,30 +668,35 @@
     }
     document.getElementById('viewOverlay').classList.add('show');
   }
-
+ 
   window.closeViewModal = function() {
     document.getElementById('viewOverlay').classList.remove('show');
     selectedId = null;
   };
-
+ 
   window.deleteMemory = async function() {
     if (!selectedId) return;
     try {
       await deleteDoc(doc(db, 'memories', selectedId));
       closeViewModal();
       await loadMemories();
-    } catch(e) {
-      alert('Could not delete. Try again.');
-    }
+    } catch(e) { alert('Could not delete. Try again.'); }
   };
-
-  document.getElementById('addOverlay').addEventListener('click', function(e) {
-    if (e.target === this) closeAddModal();
-  });
-  document.getElementById('viewOverlay').addEventListener('click', function(e) {
-    if (e.target === this) closeViewModal();
-  });
+ 
+  document.getElementById('addOverlay').addEventListener('click', function(e) { if (e.target === this) closeAddModal(); });
+  document.getElementById('viewOverlay').addEventListener('click', function(e) { if (e.target === this) closeViewModal(); });
 </script>
-
+ 
 </body>
 </html>
+ 
+
+
+
+
+
+
+
+
+
+
