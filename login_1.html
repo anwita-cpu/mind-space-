@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+<head>
+  <title>Mindspace — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html[data-theme="dark"] {
+      --bg: #0a0a0f; --text: #ffffff;
+      --card-bg: rgba(26,26,46,0.95); --card-border: rgba(255,255,255,0.08);
+      --input-bg: rgba(255,255,255,0.06); --input-border: rgba(255,255,255,0.1);
+      --input-color: #ffffff; --placeholder: rgba(255,255,255,0.25);
+      --subtext: rgba(255,255,255,0.45); --link: #b7b0ef;
+      --toggle-bg: rgba(255,255,255,0.08); --toggle-border: rgba(255,255,255,0.15);
+      --error: #F09595;
+    }
+
+    html[data-theme="light"] {
+      --bg: #f5f5f7; --text: #1a1a2e;
+      --card-bg: rgba(255,255,255,0.97); --card-border: rgba(0,0,0,0.75);
+      --input-bg: rgba(245,245,247,0.9); --input-border: rgba(0,0,0,0.75);
+      --input-color: #1a1a2e; --placeholder: rgba(26,26,46,0.3);
+      --subtext: rgba(26,26,46,0.5); --link: #7F77DD;
+      --toggle-bg: rgba(255,255,255,0.97); --toggle-border: rgba(0,0,0,0.75);
+      --error: #e05555;
+    }
+
+    body {
+      background-color: var(--bg); color: var(--text);
+      font-family: 'Poppins', sans-serif; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    .theme-toggle {
+      position: fixed; top: 16px; right: 20px; z-index: 200;
+      background: var(--toggle-bg); border: 1.5px solid var(--toggle-border);
+      border-radius: 99px; padding: 6px 14px; font-size: 13px;
+      font-family: 'Poppins', sans-serif; cursor: pointer; color: var(--text);
+    }
+    .theme-toggle:hover { opacity: 0.8; }
+
+    .card {
+      background: var(--card-bg); border: 1.5px solid var(--card-border);
+      border-radius: 24px; padding: 36px 32px; width: 100%; max-width: 400px;
+      transition: background 0.4s;
+    }
+
+    .brand { text-align: center; margin-bottom: 28px; }
+    .brand h1 { font-size: 28px; font-weight: 600; margin-bottom: 6px; }
+    .brand p { font-size: 14px; color: var(--subtext); }
+
+    .tabs {
+      display: flex; background: var(--input-bg);
+      border: 1.5px solid var(--input-border); border-radius: 12px;
+      padding: 4px; margin-bottom: 24px;
+    }
+    .tab {
+      flex: 1; padding: 9px; text-align: center; font-size: 14px;
+      font-family: 'Poppins', sans-serif; border: none; background: none;
+      color: var(--subtext); border-radius: 9px; cursor: pointer; transition: background 0.2s, color 0.2s;
+    }
+    .tab.active { background: #7F77DD; color: white; }
+
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; color: var(--subtext); margin-bottom: 6px; }
+    input {
+      width: 100%; background: var(--input-bg); border: 1.5px solid var(--input-border);
+      border-radius: 12px; color: var(--input-color); font-family: 'Poppins', sans-serif;
+      font-size: 14px; padding: 12px 16px; outline: none; transition: border-color 0.2s, background 0.4s;
+    }
+    input:focus { border-color: rgba(127,119,221,0.6); }
+    input::placeholder { color: var(--placeholder); }
+
+    .submit-btn {
+      width: 100%; background: #7F77DD; border: none; color: white;
+      padding: 14px; border-radius: 12px; font-size: 15px;
+      font-family: 'Poppins', sans-serif; cursor: pointer; margin-top: 8px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .submit-btn:hover { opacity: 0.88; transform: scale(1.02); }
+    .submit-btn:disabled { opacity: 0.35; cursor: default; transform: none; }
+
+    .forgot-link {
+      display: block; text-align: right; font-size: 12px;
+      color: var(--link); cursor: pointer; margin-top: -8px; margin-bottom: 4px;
+      text-decoration: none; opacity: 0.8;
+    }
+    .forgot-link:hover { opacity: 1; }
+
+    .error-msg { font-size: 13px; color: var(--error); text-align: center; margin-top: 12px; min-height: 20px; opacity: 0; transition: opacity 0.3s; }
+    .error-msg.show { opacity: 1; }
+
+    .success-msg { font-size: 13px; color: #5DCAA5; text-align: center; margin-top: 12px; min-height: 20px; opacity: 0; transition: opacity 0.3s; }
+    .success-msg.show { opacity: 1; }
+
+    #nameGroup { display: none; }
+    #forgotSection { display: none; }
+  </style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+
+<div class="card">
+  <div class="brand">
+    <h1>Mindspace 🌿</h1>
+    <p>A safe place for your mind</p>
+  </div>
+
+  <!-- Login / Signup -->
+  <div id="authSection">
+    <div class="tabs">
+      <button class="tab active" id="loginTab" onclick="switchTab('login')">Log in</button>
+      <button class="tab" id="signupTab" onclick="switchTab('signup')">Sign up</button>
+    </div>
+
+    <div id="nameGroup" class="form-group">
+      <label>First name</label>
+      <input type="text" id="firstName" placeholder="What should we call you?" autocomplete="given-name"/>
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="your@email.com" autocomplete="email"/>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password"/>
+      <a class="forgot-link" id="forgotLink" onclick="showForgot()">Forgot password?</a>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">Log in</button>
+    <p class="error-msg" id="errorMsg"></p>
+    <p class="success-msg" id="successMsg"></p>
+  </div>
+
+  <!-- Forgot password -->
+  <div id="forgotSection">
+    <div class="brand" style="margin-bottom:20px">
+      <h1 style="font-size:20px">Reset password 🔑</h1>
+      <p>We'll send a reset link to your email.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="resetEmail" placeholder="your@email.com"/>
+    </div>
+
+    <button class="submit-btn" onclick="sendReset()">Send reset link</button>
+    <p class="error-msg" id="resetError"></p>
+    <p class="success-msg" id="resetSuccess"></p>
+
+    <a class="forgot-link" style="text-align:center; margin-top:16px; display:block" onclick="showAuth()">← Back to login</a>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyCdM39QjJ0m3f9wob5qqacgHpnihMIfsW0",
+    authDomain: "mindspace-18083.firebaseapp.com",
+    projectId: "mindspace-18083",
+    storageBucket: "mindspace-18083.firebasestorage.app",
+    messagingSenderId: "1091007788631",
+    appId: "1:1091007788631:web:57a22d804d3787b5685512"
+  });
+
+  // Skip login if already signed in
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      localStorage.setItem('ms_user_id', user.uid);
+      window.location.href = 'index.html';
+    }
+  });
+
+  // Theme
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ms_theme', theme);
+    document.getElementById('themeBtn').textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+  function toggleTheme() { applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
+  applyTheme(localStorage.getItem('ms_theme') || 'dark');
+
+  // Tab switching
+  var currentTab = 'login';
+  function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+    document.getElementById('signupTab').classList.toggle('active', tab === 'signup');
+    document.getElementById('nameGroup').style.display = tab === 'signup' ? 'block' : 'none';
+    document.getElementById('forgotLink').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('submitBtn').textContent = tab === 'login' ? 'Log in' : 'Create account';
+    document.getElementById('password').autocomplete = tab === 'login' ? 'current-password' : 'new-password';
+    hideMessages();
+  }
+
+  function showForgot() {
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('forgotSection').style.display = 'block';
+  }
+  function showAuth() {
+    document.getElementById('forgotSection').style.display = 'none';
+    document.getElementById('authSection').style.display = 'block';
+  }
+
+  function showError(msg) {
+    var el = document.getElementById('errorMsg');
+    el.textContent = msg; el.classList.add('show');
+    document.getElementById('successMsg').classList.remove('show');
+  }
+  function showSuccess(msg) {
+    var el = document.getElementById('successMsg');
+    el.textContent = msg; el.classList.add('show');
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+  function hideMessages() {
+    document.getElementById('errorMsg').classList.remove('show');
+    document.getElementById('successMsg').classList.remove('show');
+  }
+
+  function handleSubmit() {
+    var email = document.getElementById('email').value.trim();
+    var password = document.getElementById('password').value;
+    var firstName = document.getElementById('firstName').value.trim();
+    if (!email || !password) { showError('Please fill in all fields.'); return; }
+    if (currentTab === 'signup' && !firstName) { showError('Please enter your first name.'); return; }
+    if (password.length < 6) { showError('Password must be at least 6 characters.'); return; }
+
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = currentTab === 'login' ? 'Logging in...' : 'Creating account...';
+
+    if (currentTab === 'signup') {
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then(function(cred) {
+          localStorage.setItem('ms_first_name', firstName);
+          localStorage.setItem('ms_user_id', cred.user.uid);
+          showSuccess('Account created! Redirecting...');
+          setTimeout(function() { window.location.href = 'index.html'; }, 1500);
+        })
+        .catch(function(err) { btn.disabled = false; btn.textContent = 'Create account'; showError(friendlyError(err.code)); });
+    } else {
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(function(cred) {
+          localStorage.setItem('ms_user_id', cred.user.uid);
+          showSuccess('Welcome back! Redirecting...');
+          setTimeout(function() { window.location.href = 'index.html'; }, 1500);
+        })
+        .catch(function(err) { btn.disabled = false; btn.textContent = 'Log in'; showError(friendlyError(err.code)); });
+    }
+  }
+
+  function sendReset() {
+    var email = document.getElementById('resetEmail').value.trim();
+    if (!email) { document.getElementById('resetError').textContent = 'Please enter your email.'; document.getElementById('resetError').classList.add('show'); return; }
+    firebase.auth().sendPasswordResetEmail(email)
+      .then(function() {
+        document.getElementById('resetSuccess').textContent = '✅ Reset link sent! Check your inbox.';
+        document.getElementById('resetSuccess').classList.add('show');
+        document.getElementById('resetError').classList.remove('show');
+      })
+      .catch(function(err) {
+        document.getElementById('resetError').textContent = friendlyError(err.code);
+        document.getElementById('resetError').classList.add('show');
+      });
+  }
+
+  function friendlyError(code) {
+    switch(code) {
+      case 'auth/email-already-in-use': return 'This email is already registered. Try logging in.';
+      case 'auth/invalid-email': return "That email address doesn't look right.";
+      case 'auth/weak-password': return 'Password must be at least 6 characters.';
+      case 'auth/user-not-found': return 'No account found with that email.';
+      case 'auth/wrong-password': return 'Incorrect password. Try again.';
+      case 'auth/too-many-requests': return 'Too many attempts. Please try again later.';
+      case 'auth/invalid-credential': return 'Incorrect email or password. Try again.';
+      default: return 'Something went wrong. Please try again.';
+    }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      if (document.getElementById('forgotSection').style.display === 'block') sendReset();
+      else handleSubmit();
+    }
+  });
+</script>
+
+</body>
+</html>
