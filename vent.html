@@ -1,141 +1,184 @@
-<!DOCTYPE html>
-      <html>
-          <head>
-              <title>Vent — MindSpace</title>
-              <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-             <style>
-        body {
-        background-color:black;
-        color:white;
-        font-family: 'Poppins', sans-serif;
-        text-align: center;
-        padding: 50px;
-      }  
-                   textarea {
-                  width: 600px;
-                  height: 300px;
-                 background-color: #1a1a2e;
-                 color: white;
-                  border: 2px solid #7F77DD;
-                  border-radius: 15px;
-                  padding: 20px;
-                  font-size: 16px;
-                  font-family: 'Poppins', sans-serif;
-                  resize: none;
-                   }
+html<!DOCTYPE html>
+<html data-theme="dark">
+<head>
+  <title>Vent — MindSpace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-            
-               
-             .Enter {
-             display: block;
-            margin: 20px auto;
-            background-color:white;
-            color:black;
-            padding:20px 60px;
-            border:none;
-            font-size:22px;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            }
-
-
-                  nav {
-      background-color: #1a1a2e;
-     padding: 15px;
-      display: flex;
-     gap: 20px;
-     justify-content: center;
-  }
-
-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 16px;
-}
-  
-      
-                  
-
-                   
-                         
-
-
-
-     </style>
-  </head>
-  <body>
-
-  <nav>
-        <a href ="index.html">Home</a>
-        <a href="vent.html">Vent</a>
-  </nav>
-        
-
-    <h1>💨 Need to vent?</h1>
-    <h2>This is a safe space. Type everything out. Nothing is saved.</h2>
-    <textarea placeholder="Start typing... let it all out."></textarea>
-  <button class="Enter">Let it go 🌬️</button>
-
-<p id="message" style="display:none; font-size:24px; margin-top:30px;">
-  🌬️ That took courage. You're lighter now.
-</p>
-
-
-<button id="mic" style="background-color:#7F77DD; border:none; color:white; padding:10px 20px; font-size:18px; border-radius:30px; cursor:pointer; font-family:'Poppins', sans-serif; margin-top:10px;">
-  🎤 Talk instead
-</button>
-
-
-      
-
-
-
-        
-
-      <script>
-  document.querySelector('.Enter').addEventListener('click', function() {
-    const textarea = document.querySelector('textarea');
-    
-    if(textarea.value === '') {
-      alert('Type something first!');
-      return;
+    html[data-theme="dark"] {
+      --bg: #0a0a0f;
+      --text: #ffffff;
+      --nav-bg: rgba(26,26,46,0.95);
+      --nav-border: rgba(255,255,255,0.07);
+      --textarea-bg: #1a1a2e;
+      --textarea-border: #7F77DD;
+      --textarea-color: #ffffff;
+      --placeholder: rgba(255,255,255,0.25);
+      --subtext: rgba(255,255,255,0.5);
+      --toggle-bg: rgba(255,255,255,0.08);
+      --toggle-border: rgba(255,255,255,0.15);
     }
 
+    html[data-theme="light"] {
+      --bg: #f5f5f7;
+      --text: #1a1a2e;
+      --nav-bg: rgba(255,255,255,0.97);
+      --nav-border: rgba(0,0,0,0.75);
+      --textarea-bg: #ffffff;
+      --textarea-border: #7F77DD;
+      --textarea-color: #1a1a2e;
+      --placeholder: rgba(26,26,46,0.3);
+      --subtext: rgba(26,26,46,0.5);
+      --toggle-bg: rgba(255,255,255,0.97);
+      --toggle-border: rgba(0,0,0,0.75);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 60px;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    .side-nav {
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      width: 84px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      border-right: 1.5px solid var(--nav-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 16px 0;
+      z-index: 100;
+      transition: background 0.4s;
+    }
+    .side-nav .brand { font-size: 12px; font-weight: 600; color: #b7b0ef; letter-spacing: .01em; margin-bottom: 14px; line-height: 1.2; text-align: center; }
+    .side-nav a { width: 66px; padding: 9px 0; border-radius: 14px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: var(--text); opacity: 0.55; transition: opacity .2s, background .2s; }
+    .side-nav a .ico { font-size: 20px; line-height: 1; }
+    .side-nav a .lbl { font-size: 10px; letter-spacing: .02em; }
+    .side-nav a:hover { opacity: 1; background: rgba(127,119,221,0.08); }
+    .side-nav a.active { opacity: 1; background: rgba(127,119,221,0.22); }
+    .side-nav a.active .lbl { color: #cec9f5; }
+
+    @media (min-width: 721px) { body { padding-left: 84px; } }
+    @media (max-width: 720px) {
+      body { padding-bottom: 80px; }
+      .side-nav { top: auto; bottom: 0; left: 0; width: 100%; height: auto; flex-direction: row; justify-content: space-around; gap: 0; padding: 6px 2px; border-right: none; border-top: 1.5px solid var(--nav-border); }
+      .side-nav .brand { display: none; }
+      .side-nav a { width: auto; flex: 1; padding: 6px 0; }
+      .theme-toggle { top: 12px; right: 12px; }
+      textarea { width: 90%; }
+    }
+
+    .theme-toggle {
+      position: fixed; top: 16px; right: 20px; z-index: 200;
+      background: var(--toggle-bg); border: 1.5px solid var(--toggle-border);
+      border-radius: 99px; padding: 6px 14px; font-size: 13px;
+      font-family: 'Poppins', sans-serif; cursor: pointer; color: var(--text);
+      transition: background 0.3s; display: flex; align-items: center; gap: 6px;
+    }
+    .theme-toggle:hover { opacity: 0.8; }
+
+    .page { max-width: 700px; margin: 0 auto; padding: 60px 20px 40px; text-align: center; }
+
+    h1 { font-size: 32px; font-weight: 600; margin-bottom: 10px; }
+    h2 { font-size: 15px; font-weight: 400; color: var(--subtext); margin-bottom: 32px; }
+
+    textarea {
+      width: 600px; max-width: 100%; height: 300px;
+      background: var(--textarea-bg); color: var(--textarea-color);
+      border: 2px solid var(--textarea-border); border-radius: 15px;
+      padding: 20px; font-size: 16px; font-family: 'Poppins', sans-serif;
+      resize: none; outline: none; transition: background 0.4s, color 0.4s;
+    }
+    textarea::placeholder { color: var(--placeholder); }
+
+    .let-go-btn {
+      display: block; margin: 20px auto;
+      background: #7F77DD; color: white;
+      padding: 14px 48px; border: none; font-size: 18px;
+      font-family: 'Poppins', sans-serif; border-radius: 30px;
+      cursor: pointer; transition: opacity .2s, transform .15s;
+    }
+    .let-go-btn:hover { opacity: 0.88; transform: scale(1.03); }
+
+    #message { display: none; font-size: 22px; margin-top: 30px; color: var(--text); }
+
+    #mic {
+      background: rgba(127,119,221,0.2); border: 1.5px solid rgba(127,119,221,0.5);
+      color: var(--text); padding: 10px 24px; font-size: 15px; border-radius: 30px;
+      cursor: pointer; font-family: 'Poppins', sans-serif; margin-top: 12px; transition: background .2s;
+    }
+    #mic:hover { background: rgba(127,119,221,0.35); }
+  </style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+
+<nav class="side-nav">
+  <div class="brand">Mindspace</div>
+  <a href="index.html"><span class="ico">🏠</span><span class="lbl">Home</span></a>
+  <a href="sage.html"><span class="ico">💬</span><span class="lbl">Sage</span></a>
+  <a href="tracker.html"><span class="ico">📊</span><span class="lbl">Mood</span></a>
+  <a href="toolkit.html"><span class="ico">🧘</span><span class="lbl">Coping</span></a>
+  <a href="vent.html" class="active"><span class="ico">💨</span><span class="lbl">Vent</span></a>
+  <a href="community.html"><span class="ico">🫂</span><span class="lbl">Circle</span></a>
+  <a href="memory.html"><span class="ico">🫙</span><span class="lbl">Memory</span></a>
+</nav>
+
+<div class="page">
+  <h1>💨 Need to vent?</h1>
+  <h2>This is a safe space. Type everything out. Nothing is saved.</h2>
+  <textarea placeholder="Start typing... let it all out."></textarea>
+  <button class="let-go-btn">Let it go 🌬️</button>
+  <button id="mic">🎤 Talk instead</button>
+  <p id="message">🌬️ That took courage. You're lighter now.</p>
+</div>
+
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ms_theme', theme);
+    document.getElementById('themeBtn').textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+  function toggleTheme() { applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
+  applyTheme(localStorage.getItem('ms_theme') || 'dark');
+
+  document.querySelector('.let-go-btn').addEventListener('click', function() {
+    var textarea = document.querySelector('textarea');
+    if (textarea.value === '') { alert('Type something first!'); return; }
     textarea.style.transition = 'opacity 1s ease, transform 1s ease';
     textarea.style.opacity = '0';
     textarea.style.transform = 'scale(0.8)';
-    
-setTimeout(function() {
-  textarea.style.display = 'none';
-  document.querySelector('.Enter').style.display = 'none';
-  document.getElementById('message').style.display = 'block';
-  }, 1000);
+    setTimeout(function() {
+      textarea.style.display = 'none';
+      document.querySelector('.let-go-btn').style.display = 'none';
+      document.getElementById('mic').style.display = 'none';
+      document.getElementById('message').style.display = 'block';
+    }, 1000);
+  });
 
+  document.getElementById('mic').addEventListener('click', function() {
+    var recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = true;
+    document.getElementById('mic').textContent = '🔴 Listening...';
+    recognition.onresult = function(event) {
+      var text = '';
+      for (var i = 0; i < event.results.length; i++) { text += event.results[i][0].transcript; }
+      document.querySelector('textarea').value = text;
+    };
+    recognition.start();
   });
 </script>
- 
-<script>
-  document.getElementById('mic').addEventListener('click', function() {
-  var recognition = new webkitSpeechRecognition();
-  recognition.lang = 'en-US';
-  recognition.continuous = true; 
 
-  document.getElementById('mic').textContent = '🔴 Listening...';
-
-  recognition.onresult = function(event) {
-    var text = '';
-    for (var i = 0; i < event.results.length; i++) {
-      text = text + event.results[i][0].transcript;
-    }
-    document.querySelector('textarea').value = text;
-  };
-
-  recognition.start();
-});
-   </script>
-    
-
-  </body>
+</body>
 </html>
-            
-        
