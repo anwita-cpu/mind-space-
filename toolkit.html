@@ -1,109 +1,217 @@
+
+
+
 <!DOCTYPE html>
-  <html>
-       <head>
-
-         <title> Coping toolkit -Mindspace </title>
-         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<html data-theme="dark">
+<head>
+  <title>Coping Toolkit — Mindspace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-      body{
-      background:black;
-      color:white;
-      text-align: center;
-       padding: 50px;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    html[data-theme="dark"] {
+      --bg: #0a0a0f;
+      --text: #ffffff;
+      --nav-bg: rgba(26,26,46,0.95);
+      --nav-border: rgba(255,255,255,0.07);
+      --card-bg: #1a1a2e;
+      --card-border: rgba(255,255,255,0.07);
+      --card-hover-bg: #2a2a4a;
+      --subtext: rgba(255,255,255,0.5);
+      --disclaimer-bg: #1a1a2e;
+      --disclaimer-color: #999;
+      --toggle-bg: rgba(255,255,255,0.08);
+      --toggle-border: rgba(255,255,255,0.15);
+    }
+ 
+    html[data-theme="light"] {
+      --bg: #f5f5f7;
+      --text: #1a1a2e;
+      --nav-bg: rgba(255,255,255,0.97);
+      --nav-border: rgba(0,0,0,0.75);
+      --card-bg: rgba(255,255,255,0.97);
+      --card-border: rgba(0,0,0,0.75);
+      --card-hover-bg: rgba(240,238,255,0.98);
+      --subtext: rgba(26,26,46,0.5);
+      --disclaimer-bg: rgba(255,255,255,0.9);
+      --disclaimer-color: #666;
+      --toggle-bg: rgba(255,255,255,0.97);
+      --toggle-border: rgba(0,0,0,0.75);
+    }
+ 
+    body {
+      background-color: var(--bg);
+      color: var(--text);
       font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 60px;
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
-
-    .cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-}
-
-    .card {
-  background-color: #1a1a2e;
-  color: white;
-  padding: 20px;
-  border-radius: 15px;
-  width: 250px;
-  cursor: pointer;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
- .card:hover {
-  background-color: #2a2a4a;
-  transform: translateY(-5px);
-}
-    
-    h1{
-    font-size: 36px;
-    }
-    
-    p{
-      font-size: 18px;
-    }
-     nav {
-      background-color: #1a1a2e;
-      padding: 15px;
+ 
+    /* Sidebar nav */
+    .side-nav {
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      width: 84px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      border-right: 1.5px solid var(--nav-border);
       display: flex;
-      gap: 20px;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 16px 0;
+      z-index: 100;
+      transition: background 0.4s;
     }
-    
-    nav a{ 
-      color: white;
-      text-decoration: none;
-      font-size: 16px;
-
-      </style>
-      
-      </head>
-    <body>
-     <nav>
-    <a href="index.html">Mindspace</a>
-    <a href="toolkit.html">Toolkit</a>
-    </nav>
-    
-    <h2> Welcoming to Coping Toolkit.</h2>
-    <p>If you feel the need for immediate help you have come to the right place</p>
-
-    <div class="cards-container">
-    
+    .side-nav .brand { font-size: 12px; font-weight: 600; color: #b7b0ef; letter-spacing: .01em; margin-bottom: 14px; line-height: 1.2; text-align: center; }
+    .side-nav a {
+      width: 66px; padding: 9px 0; border-radius: 14px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      text-decoration: none; color: var(--text); opacity: 0.55;
+      transition: opacity .2s, background .2s;
+    }
+    .side-nav a .ico { font-size: 20px; line-height: 1; }
+    .side-nav a .lbl { font-size: 10px; letter-spacing: .02em; }
+    .side-nav a:hover { opacity: 1; background: rgba(127,119,221,0.08); }
+    .side-nav a.active { opacity: 1; background: rgba(127,119,221,0.22); }
+    .side-nav a.active .lbl { color: #cec9f5; }
+ 
+    @media (min-width: 721px) { body { padding-left: 84px; } }
+    @media (max-width: 720px) {
+      body { padding-bottom: 80px; }
+      .side-nav { top: auto; bottom: 0; left: 0; width: 100%; height: auto; flex-direction: row; justify-content: space-around; gap: 0; padding: 6px 2px; border-right: none; border-top: 1.5px solid var(--nav-border); }
+      .side-nav .brand { display: none; }
+      .side-nav a { width: auto; flex: 1; padding: 6px 0; }
+      .theme-toggle { top: 12px; right: 12px; }
+    }
+ 
+    .theme-toggle {
+      position: fixed; top: 16px; right: 20px; z-index: 200;
+      background: var(--toggle-bg); border: 1.5px solid var(--toggle-border);
+      border-radius: 99px; padding: 6px 14px; font-size: 13px;
+      font-family: 'Poppins', sans-serif; cursor: pointer; color: var(--text);
+      transition: background 0.3s; display: flex; align-items: center; gap: 6px;
+    }
+    .theme-toggle:hover { opacity: 0.8; }
+ 
+    .page {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 60px 20px 40px;
+      text-align: center;
+    }
+ 
+    h2 { font-size: 26px; font-weight: 600; margin-bottom: 10px; }
+    .subtext { font-size: 15px; color: var(--subtext); margin-bottom: 36px; }
+ 
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px;
+    }
+ 
+    .card {
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 24px 20px;
+      border-radius: 16px;
+      width: 200px;
+      cursor: pointer;
+      border: 1.5px solid var(--card-border);
+      transition: transform 0.3s ease, background 0.3s ease;
+      text-align: center;
+    }
+    .card:hover { background: var(--card-hover-bg); transform: translateY(-5px); border-color: rgba(127,119,221,0.5); }
+    .card h4 { font-size: 15px; margin-bottom: 8px; }
+    .card p { font-size: 13px; color: var(--subtext); line-height: 1.6; }
+ 
+    .disclaimer {
+      margin: 40px auto 0;
+      padding: 20px;
+      background: var(--disclaimer-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 15px;
+      font-size: 13px;
+      color: var(--disclaimer-color);
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+ 
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+ 
+<nav class="side-nav">
+  <div class="brand">Mindspace</div>
+  <a href="index.html"><span class="ico">🏠</span><span class="lbl">Home</span></a>
+  <a href="sage.html"><span class="ico">💬</span><span class="lbl">Sage</span></a>
+  <a href="tracker.html"><span class="ico">📊</span><span class="lbl">Mood</span></a>
+  <a href="toolkit.html" class="active"><span class="ico">🧘</span><span class="lbl">Coping</span></a>
+  <a href="vent.html"><span class="ico">💨</span><span class="lbl">Vent</span></a>
+  <a href="community.html"><span class="ico">🫂</span><span class="lbl">Circle</span></a>
+  <a href="memory.html"><span class="ico">🫙</span><span class="lbl">Memory</span></a>
+</nav>
+ 
+<div class="page">
+  <h2>🧘 Coping Toolkit</h2>
+  <p class="subtext">If you feel the need for immediate help, you've come to the right place.</p>
+ 
+  <div class="cards-container">
     <div class="card" onclick="window.location.href='panic.html'">
-    <h4>😰Panic Attack</h4>
-    <p>Guided challenges to distract your mind and calm down.</p>
+      <h4>😰 Panic Attack</h4>
+      <p>Guided challenges to distract your mind and calm down.</p>
     </div>
-
-   <div class="card" onclick="window.location.href='anxiety.html'">
-    <h4>🌀Anxiety/Stress</h4>
-    <p>We can't fix what's worrying you, but we can help you get through the next few minutes.</p>
- </div>
-
- <div class="card" onclick="window.location.href='anger.html'">
-     <h4>🔥 Anger / Frustration </h4>
-    <p>A guided cool-down to release the tension.</p>
-</div>
-  
-  <div class="card" onclick="window.location.href='sad.html'">
-  <h4>🌧 Feeling Sad/ Low</h4>
-  <p>Spin the mood lifter wheel for a small activity to brighten your day.</p>
+    <div class="card" onclick="window.location.href='anxiety.html'">
+      <h4>🌀 Anxiety / Stress</h4>
+      <p>We can't fix what's worrying you, but we can help you get through the next few minutes.</p>
+    </div>
+    <div class="card" onclick="window.location.href='anger.html'">
+      <h4>🔥 Anger / Frustration</h4>
+      <p>A guided cool-down to release the tension.</p>
+    </div>
+    <div class="card" onclick="window.location.href='sad.html'">
+      <h4>🌧 Feeling Sad / Low</h4>
+      <p>Spin the mood lifter wheel for a small activity to brighten your day.</p>
+    </div>
+    <div class="card" onclick="window.location.href='sleep.html'">
+      <h4>🌙 Can't Sleep</h4>
+      <p>Calming sounds and breathing to help you drift off.</p>
+    </div>
   </div>
-    
- <div class="card" onclick="window.location.href='sleep.html'">
-     <h4>🌙 Can't Sleep</h4> 
-    <p>Calming sounds and breathing to help you drift off.</p>
+ 
+  <div class="disclaimer">
+    ⚠️ MindSpace is not a substitute for professional therapy or medical advice. If you are in crisis or need immediate help, please contact a trusted adult or call a helpline.
+  </div>
 </div>
-    
-</div>
-      <div style="margin-top:50px; padding:20px; background-color:#1a1a2e; border-radius:15px; font-size:14px; color:#999;">
-  <p>⚠️ MindSpace is not a substitute for professional therapy or medical advice. If you are in crisis or need immediate help, please contact a trusted adult or call a helpline.</p>
-</div>
-    
+ 
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ms_theme', theme);
+    document.getElementById('themeBtn').textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+  function toggleTheme() { applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
+  applyTheme(localStorage.getItem('ms_theme') || 'dark');
+</script>
+ 
+</body>
+</html>
+ 
 
-    
-    
-  </body>
-  </html>
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
